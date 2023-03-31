@@ -1,4 +1,5 @@
 ﻿using insurance_policy_api.DTOs;
+using insurance_policy_api_domain.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
@@ -17,27 +18,44 @@ public class PolicyController : ControllerBase
     /// Cria uma apólice com suas parcelas de pagamento.<br />
     /// </remarks>
     [HttpPost]
-    [ProducesResponseType(typeof(PolicyDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreatePolicy([FromBody][Required] PolicyDTO policy)
+    public async Task<IActionResult> CreatePolicyAsync([FromBody][Required] PolicyDTO policy
+        , [FromServices] IPolicyDomainService policyDomainService)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        throw new NotImplementedException();
+        await policyDomainService.CreatePolicyAsync(policy);
+
+        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+        var response = new ResponseDTO<PolicyDTO>()
+        {
+            Data = policy,
+            Links = new LinkDTO[]
+            {
+                    new LinkDTO($"{urlBase}/{policy.Id}", "get_policy", "GET"),
+                    //new LinkDTO($"{urlBase}", "get_all_policy", "GET"),
+                    new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
+                    new LinkDTO($"{urlBase}/{policy.Id}/pagamento", "register_payment", "POST")
+            }
+        };
+
+       return Created($"{ urlBase }/{ response.Data.Id }", response);
     }
 
     /// <summary>
     /// Busca todas as apólices registradas.
     /// </summary>
     /// <remarks>
-    /// Retrona todas as apólices do banco de dados criadas.<br />
+    /// Retorna todas as apólices do banco de dados criadas.<br />
     /// </remarks>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<PolicyDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ConsultAllPolices()
+    public async Task<IActionResult> GetAllPoliciesAsync()
     {
         throw new NotImplementedException();
     }
@@ -46,14 +64,13 @@ public class PolicyController : ControllerBase
     /// Busca uma a apólice registrada.
     /// </summary>
     /// <remarks>
-    /// Busca uma apólice por id e suas respectivas parcelas<br />
+    /// Busca uma apólice por id e suas respectivas parcelas.<br />
     /// </remarks>
-    [HttpGet]
+    [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(PolicyDTO), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Route("{id:int}")]
-    public async Task<IActionResult> ConsultPolicyByID([FromRoute][Required] int id)
+    public async Task<IActionResult> GetPolicyByIdAsync([FromRoute][Required] int id)
     {
         throw new NotImplementedException();
     }
@@ -68,7 +85,7 @@ public class PolicyController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdatePolicy([FromBody][Required] PolicyDTO policy)
+    public async Task<IActionResult> UpdatePolicyAsync([FromBody][Required] PolicyDTO policy)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -82,11 +99,10 @@ public class PolicyController : ControllerBase
     /// <remarks>
     /// Gera a baixa de uma parcela do pagamento de uma apólice.
     /// </remarks>
-    [HttpPost]
-    [Route("{id:int}/pagamento")]
+    [HttpPost("{id:int}/pagamento")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterPayment([FromRoute][Required] int id, [FromQuery][Required] DateTime datePagamento)
+    public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime datePagamento)
     {
         throw new NotImplementedException();
     }

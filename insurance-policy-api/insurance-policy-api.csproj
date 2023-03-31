@@ -15,4 +15,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\insurance-policy-api-infrastructure\insurance-policy-api-infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

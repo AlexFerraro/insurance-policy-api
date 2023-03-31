@@ -11,4 +11,8 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\insurance-policy-api-domain\insurance-policy-api-domain.csproj" />
+  </ItemGroup>
+
 </Project>

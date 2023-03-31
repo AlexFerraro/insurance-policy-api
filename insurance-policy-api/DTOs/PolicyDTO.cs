@@ -27,5 +27,7 @@ public record class PolicyDTO
     public decimal PremiumTotal { get; init; }
 
     [JsonPropertyName("parcelas")]
+    [Required(ErrorMessage = "A parcela não pode ser nula!")]
+    [MinLength(1, ErrorMessage = "A apólice necessita ter ao menos uma parcela!")]
     public IEnumerable<InstallmentDTO> Installments { get; init; }
 }
