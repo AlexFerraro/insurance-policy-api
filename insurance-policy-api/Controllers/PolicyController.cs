@@ -1,5 +1,5 @@
 ﻿using insurance_policy_api.DTOs;
-using insurance_policy_api_domain.Contracts;
+using insurance_policy_api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
@@ -11,6 +11,11 @@ namespace insurance_policy_api.Controllers;
 [Produces(Application.Json)]
 public class PolicyController : ControllerBase
 {
+    private readonly IPolicyAppService _policyAppService;
+
+    public PolicyController(IPolicyAppService policyAppService) =>
+        _policyAppService = policyAppService;
+
     /// <summary>
     /// Cria uma apólice.
     /// </summary>
@@ -21,29 +26,28 @@ public class PolicyController : ControllerBase
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreatePolicyAsync([FromBody][Required] PolicyDTO policy
-        , [FromServices] IPolicyDomainService policyDomainService)
+    public async Task<IActionResult> CreatePolicyAsync([FromBody][Required] PolicyDTO policy)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        await policyDomainService.CreatePolicyAsync(policy);
+        var policyCreated =  await _policyAppService.CreatePolicyAsync(policy);
 
         var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
 
         var response = new ResponseDTO<PolicyDTO>()
         {
-            Data = policy,
+            Data = policyCreated,
             Links = new LinkDTO[]
             {
-                    new LinkDTO($"{urlBase}/{policy.Id}", "get_policy", "GET"),
-                    //new LinkDTO($"{urlBase}", "get_all_policy", "GET"),
+                    new LinkDTO($"{urlBase}/{policyCreated.Id}", "get_policy", "GET"),
+                    new LinkDTO($"{urlBase}", "get_all_policy", "GET"),
                     new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
-                    new LinkDTO($"{urlBase}/{policy.Id}/pagamento", "register_payment", "POST")
+                    new LinkDTO($"{urlBase}/{policyCreated.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
             }
         };
 
-       return Created($"{ urlBase }/{ response.Data.Id }", response);
+        return Created($"{urlBase}/{response.Data.Id}", response);
     }
 
     /// <summary>
@@ -55,24 +59,44 @@ public class PolicyController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<PolicyDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAllPoliciesAsync()
+    public async Task<IActionResult> GetAllPoliciesAsync([FromQuery][Required] int skip, [FromQuery][Required] int take)
     {
-        throw new NotImplementedException();
+        var policiesReceived = await _policyAppService.GetAllPoliciesAsync(skip, take);
+
+        return Ok(policiesReceived);
     }
 
     /// <summary>
-    /// Busca uma a apólice registrada.
+    /// Busca uma apólice registrada.
     /// </summary>
     /// <remarks>
     /// Busca uma apólice por id e suas respectivas parcelas.<br />
     /// </remarks>
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(PolicyDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPolicyByIdAsync([FromRoute][Required] int id)
     {
-        throw new NotImplementedException();
+        var policyReceived = await _policyAppService.GetPolicyByIdAsync(id);
+
+        if(policyReceived is null)
+            return NotFound();
+
+        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path.ToString().Substring(0, 15)}";
+
+        var response = new ResponseDTO<PolicyDTO>()
+        {
+            Data = policyReceived,
+            Links = new LinkDTO[]
+            {           
+                    new LinkDTO($"{urlBase}", "get_all_policy", "GET"),
+                    new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
+                    new LinkDTO($"{urlBase}/{policyReceived.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
+            }
+        };
+
+        return Ok(response);
     }
 
     /// <summary>

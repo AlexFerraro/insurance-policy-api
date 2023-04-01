@@ -9,28 +9,27 @@ public class PolicyRepository : IPolicyRepository
 {
     private readonly PolicyDbContext _policyDbContext;
 
-    public PolicyRepository(PolicyDbContext context) => _policyDbContext = context;
+    public PolicyRepository(PolicyDbContext context) =>
+        _policyDbContext = context;
 
     public async Task AddAsync(PolicyEntity policyEntity) =>
         await _policyDbContext.AddAsync(policyEntity);
-    
 
-    public async Task<PolicyEntity> GetByIdAsync(int entityID)
-    {
-        throw new NotImplementedException();
-    }
 
-    public async Task<IEnumerable<PolicyEntity>> GetAllAsync() =>
-        await _policyDbContext.Policies.Include(i => i.Parcelas).ToListAsync();
-    
+    public async Task<PolicyEntity> GetByIdAsync(int entityID) =>
+        await _policyDbContext.Policies.Include(i => i.Parcelas).Where(p => p.EntityID == entityID).FirstOrDefaultAsync();
+
+    public async Task<IEnumerable<PolicyEntity>> GetAllAsync(int skip, int take) =>
+        await _policyDbContext.Policies.Include(i => i.Parcelas).Skip(skip).Take(take).ToListAsync();
 
     public async Task UpdateAsync()
     {
         throw new NotImplementedException();
     }
 
-    public async Task CommitAsync()
-    {
-        await _policyDbContext.SaveChangesAsync();
-    }
+    //Comportamento movido para o UnityOfWork
+    //public async Task CommitAsync()
+    //{
+    //    await _policyDbContext.SaveChangesAsync();
+    //}
 }

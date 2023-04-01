@@ -1,5 +1,5 @@
-﻿using insurance_policy_api.DTOs;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System.Net;
 using System.Text.Json;
 
@@ -31,19 +31,16 @@ public class ExceptionMiddleware
 
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        HttpStatusCode statusCode;
-        string message;
+        var (statusCode, message) = exception switch
+        {
+            DbUpdateException { InnerException: NpgsqlException { InnerException: TimeoutException } } =>
+                (HttpStatusCode.RequestTimeout, "Timeout na conexão com o banco de dados."),
 
-        if (exception is DbUpdateException)
-        {
-            statusCode = HttpStatusCode.InternalServerError;
-            message = "A solicitação não pôde ser processada devido a um erro no banco de dados.";
-        }
-        else
-        {
-            statusCode = HttpStatusCode.InternalServerError;
-            message = "Ocorreu um erro inesperado, entre em contato com o suporte.";
-        }
+            DbUpdateException { InnerException: NpgsqlException } =>
+                (HttpStatusCode.InternalServerError, "A solicitação não pôde ser processada devido a um erro no banco de dados."),
+
+            _ => (HttpStatusCode.InternalServerError, "Ocorreu um erro inesperado, entre em contato com o suporte.")
+        };
 
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json";

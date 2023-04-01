@@ -1,12 +1,13 @@
-﻿using insurance_policy_api_domain.Entities;
+﻿using insurance_policy_api.DTOs;
+using insurance_policy_api_domain.Entities;
 
 namespace insurance_policy_api.Interfaces;
 
 public interface IPolicyAppService
 {
-    Task CreatePolicyAsync(PolicyEntity policyEntity);
-    Task<PolicyEntity> GetPolicyByIdAsync(int entityID);
-    Task<IEnumerable<PolicyEntity>> GetAllPoliciesAsync();
+    Task<PolicyDTO> CreatePolicyAsync(PolicyDTO policyDto);
+    Task<PolicyDTO> GetPolicyByIdAsync(int entityId);
+    Task<IEnumerable<PolicyEntity>> GetAllPoliciesAsync(int skip, int take);
     Task UpdatePolicyAsync();
-    Task RegisterPaymentAsync(int entityID, DateTime datePagamento);
+    Task<PolicyDTO> RegisterPaymentAsync(int entityId, DateTime datePagamento);
 }

@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "insurance-policy-api", "insurance-policy-api\insurance-policy-api.csproj", "{0E4A937C-6F2D-423E-BCCD-C62F8A44760C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "insurance-policy-api", "insurance-policy-api\insurance-policy-api.csproj", "{0E4A937C-6F2D-423E-BCCD-C62F8A44760C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "insurance-policy-api-domain", "insurance-policy-api-domain\insurance-policy-api-domain.csproj", "{95BCFDB5-7538-457A-B71C-5C8BD8E738F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "insurance-policy-api-domain", "insurance-policy-api-domain\insurance-policy-api-domain.csproj", "{95BCFDB5-7538-457A-B71C-5C8BD8E738F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "insurance-policy-api-infrastructure", "insurance-policy-api-infrastructure\insurance-policy-api-infrastructure.csproj", "{EE0E1D4F-00A2-42B7-9CCA-0F8C27C6939F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "insurance-policy-api-infrastructure", "insurance-policy-api-infrastructure\insurance-policy-api-infrastructure.csproj", "{EE0E1D4F-00A2-42B7-9CCA-0F8C27C6939F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "insurance-policy-api-test", "insurance-policy-api-test\insurance-policy-api-test.csproj", "{93675637-0B12-467F-BCC2-781D48421CDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "insurance-policy-api-test", "insurance-policy-api-test\insurance-policy-api-test.csproj", "{93675637-0B12-467F-BCC2-781D48421CDB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D587881B-DB5C-411D-B060-6148D2EEB88F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,9 @@ public interface IPolicyRepository
 {
     Task AddAsync(PolicyEntity policyEntity);
     Task<PolicyEntity> GetByIdAsync(int entityID);
-    Task<IEnumerable<PolicyEntity>> GetAllAsync();
+    Task<IEnumerable<PolicyEntity>> GetAllAsync(int skip, int take);
     Task UpdateAsync();
-    Task CommitAsync();
+
+    //Assinatura movida para o IUnityOfWork
+    //Task CommitAsync();
 }

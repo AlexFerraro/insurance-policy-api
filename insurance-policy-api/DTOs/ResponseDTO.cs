@@ -3,5 +3,5 @@
 public record class ResponseDTO<T>
 {
     public T Data { get; init; }
-    public LinkDTO[] Links { get; init; }
+    public LinkDTO[]? Links { get; init; }
 }

@@ -2,7 +2,7 @@
 
 public enum MetodoPagamento
 {
-    Cartao,
-    Boleto,
-    Dinheiro
+    CARTAO,
+    BOLETO,
+    DINHEIRO
 }

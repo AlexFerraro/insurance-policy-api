@@ -1,16 +1,17 @@
 create table apolice (
-	id int not null primary key,
+	id int not null primary key generated always as identity,
 	descricao VARCHAR(50),
-	cpf int,
+	cpf VARCHAR(12),
 	situacao VARCHAR (10),
 	premio_total decimal(10, 2),
 	data_criacao_registro date,
 	data_alteracao_registro date,
 	usuario_criacao_registro int,
 	usuario_alteracao_registro int
-)
+);
+
 create table parcela (
-	id int primary key,
+	id int primary key generated always as identity,
 	id_apolice int,
 	premio decimal(10, 2),
 	forma_pagamento VARCHAR(50),
@@ -25,4 +26,4 @@ create table parcela (
 	CONSTRAINT apolice_id_apolice__fkey
  FOREIGN KEY (id_apolice)
  REFERENCES apolice (id)
-)
+);
