@@ -12,59 +12,59 @@ public class AutoMapperProfile : Profile
     {
         CreateMap<PolicyDTO, PolicyEntity>()
             .ForMember(dest => dest.EntityID, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Cpf))
-            .ForMember(dest => dest.Situacao, opt => opt.MapFrom(src => src.Status))
-            .ForMember(dest => dest.PremioTotal, opt => opt.MapFrom(src => src.PremiumTotal))
-            .ForMember(dest => dest.Parcelas, opt => opt.MapFrom(src => src.Installments));
+            .ForMember(dest => dest.Situation, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dest => dest.TotalPrize, opt => opt.MapFrom(src => src.PremiumTotal))
+            .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Installments));
 
         CreateMap<InstallmentDTO, InstallmentEntity>()
             .ForMember(dest => dest.EntityID, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.IdApolice, opt => opt.Ignore())
-            .ForMember(dest => dest.Premio, opt => opt.MapFrom(src => src.Premium))
-            .ForMember(dest => dest.FormaPagamento, opt => opt.MapFrom(src => Enum.Parse<MetodoPagamento>(src.PaymentMethod.ToUpper())))
-            .ForMember(dest => dest.DataPagamento, opt => opt.MapFrom(src => src.PaymentDate))
-            .ForMember(dest => dest.Situacao, opt => opt.Ignore())
-            .ForMember(dest => dest.Apolice, opt => opt.Ignore());
+            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => Enum.Parse<PaymentMethod>(src.PaymentMethod.ToUpper())))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate))
+            .ForMember(dest => dest.Situation, opt => opt.Ignore())
+            .ForMember(dest => dest.Policy, opt => opt.Ignore());
 
         CreateMap<PolicyEntity, PolicyDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Descricao))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Cpf))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situacao))
-            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.PremioTotal.Value))
-            .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Parcelas));
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
+            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.TotalPrize.Value))
+            .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Installments));
 
         CreateMap<InstallmentEntity, InstallmentDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
-            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premio.Value))
-            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.FormaPagamento.ToString().ToUpper()))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.DataPagamento.Value));
+            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium.Value))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value));
 
         CreateMap<PolicyEntity, PolicyDetailsDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
-            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Descricao))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => long.Parse(src.Cpf)))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situacao))
-            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.PremioTotal))
-            .ForMember(dest => dest.DataCriacaoRegistro, opt => opt.MapFrom(src => src.DataCriacaoRegistro.Value.ToString("yyyy-MM-dd")))
-            .ForMember(dest => dest.DataAlteracaoRegistro, opt => opt.MapFrom(src => src.DataAlteracaoRegistro.Value.ToString("yyyy-MM-dd")))
-            .ForMember(dest => dest.UsuarioCriacaoRegistro, opt => opt.MapFrom(src => src.UsuarioCriacaoRegistro))
-            .ForMember(dest => dest.UsuarioAlteracaoRegistro, opt => opt.MapFrom(src => src.UsuarioAlteracaoRegistro))
-            .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Parcelas));
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
+            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.TotalPrize))
+            .ForMember(dest => dest.DataCriacaoRegistro, opt => opt.MapFrom(src => src.RecordCreationDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.DataAlteracaoRegistro, opt => opt.MapFrom(src => src.RegistrationChangeDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.UsuarioCriacaoRegistro, opt => opt.MapFrom(src => src.UserCreationRecord))
+            .ForMember(dest => dest.UsuarioAlteracaoRegistro, opt => opt.MapFrom(src => src.UserRecordChange))
+            .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Installments));
 
         CreateMap<InstallmentEntity, InstallmentDetailsDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
-            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premio.Value))
-            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.FormaPagamento.ToString().ToUpper()))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.DataPagamento.Value))
-            .ForMember(dest => dest.DataPaid, opt => opt.MapFrom(src => src.DataPago.Value))
-            .ForMember(dest => dest.Fees, opt => opt.MapFrom(src => src.Juros.Value))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situacao))
-            .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.DataCriacaoRegistro.Value.ToString("yyyy-MM-dd")))
-            .ForMember(dest => dest.RecordModificationDate, opt => opt.MapFrom(src => src.DataAlteracaoRegistro.Value.ToString("yyyy-MM-dd")))
-            .ForMember(dest => dest.RecordCreatedByUser, opt => opt.MapFrom(src => src.UsuarioCriacaoRegistro))
-            .ForMember(dest => dest.RecordModifiedByUser, opt => opt.MapFrom(src => src.UsuarioAlteracaoRegistro));
+            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium.Value))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value))
+            .ForMember(dest => dest.PaidDate, opt => opt.MapFrom(src => src.PaidDate.Value))
+            .ForMember(dest => dest.Fees, opt => opt.MapFrom(src => src.Fees.Value))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
+            .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.RecordCreationDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.RecordModificationDate, opt => opt.MapFrom(src => src.RegistrationChangeDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.RecordCreatedByUser, opt => opt.MapFrom(src => src.UserCreationRecord))
+            .ForMember(dest => dest.RecordModifiedByUser, opt => opt.MapFrom(src => src.UserRecordChange));
 
         CreateMap<IEnumerable<PolicyDTO>, Collection<PolicyEntity>>();
         CreateMap<IEnumerable<PolicyEntity>, Collection<PolicyDTO>>();

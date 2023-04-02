@@ -32,28 +32,28 @@ public class PolicyDomainService : IPolicyDomainService
         if (policyToUpdate is null)
             throw new NotFoundException($"Apólice não encontrada no banco de dados.");
 
-        policyToUpdate.Descricao = policyEntity.Descricao;
+        policyToUpdate.Description = policyEntity.Description;
         policyToUpdate.Cpf = policyEntity.Cpf;
-        policyToUpdate.Situacao = policyEntity.Situacao;
-        policyToUpdate.PremioTotal = policyEntity.PremioTotal;
-        policyToUpdate.DataAlteracaoRegistro = DateOnly.FromDateTime(DateTime.Now);
-        policyToUpdate.UsuarioAlteracaoRegistro = 2;
+        policyToUpdate.Situation = policyEntity.Situation;
+        policyToUpdate.TotalPrize = policyEntity.TotalPrize;
+        policyToUpdate.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
+        policyToUpdate.UserRecordChange = 2;
 
-        if (!policyEntity.Parcelas.IsNullOrEmpty()) 
+        if (!policyEntity.Installments.IsNullOrEmpty()) 
         {
             try
             {
-                policyEntity.Parcelas
+                policyEntity.Installments
                     .ForEach(installmentNew =>
                     {
-                        var installmentToUpdate = policyToUpdate.Parcelas
+                        var installmentToUpdate = policyToUpdate.Installments
                                         .First(f => installmentNew.EntityID == f.EntityID );
 
-                        installmentToUpdate.Premio = installmentNew.Premio;
-                        installmentToUpdate.FormaPagamento = installmentNew.FormaPagamento;
-                        installmentToUpdate.DataPagamento = installmentNew.DataPagamento;
-                        installmentToUpdate.DataAlteracaoRegistro = DateOnly.FromDateTime(DateTime.Now);
-                        installmentToUpdate.UsuarioAlteracaoRegistro = 2;
+                        installmentToUpdate.Premium = installmentNew.Premium;
+                        installmentToUpdate.PaymentMethod = installmentNew.PaymentMethod;
+                        installmentToUpdate.PaymentDate = installmentNew.PaymentDate;
+                        installmentToUpdate.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
+                        installmentToUpdate.UserRecordChange = 2;
                     });
             }
             catch (InvalidOperationException ex)

@@ -6,7 +6,7 @@ public record class InstallmentDetailsDTO : InstallmentDTO
 {
     [JsonPropertyName("dataPago")]
     [JsonPropertyOrderAttribute(5)]
-    public DateTime? DataPaid { get; set; } = null;
+    public DateTime? PaidDate { get; set; } = null;
     
     [JsonPropertyName("juros")]
     [JsonPropertyOrderAttribute(6)]

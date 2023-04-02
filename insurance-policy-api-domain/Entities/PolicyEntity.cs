@@ -4,22 +4,22 @@ namespace insurance_policy_api_domain.Entities;
 
 public class PolicyEntity : EntityBase<int>
 {
-    public string? Descricao { get; set; }
+    public string? Description { get; set; }
     public string? Cpf { get; set; }
-    public string? Situacao { get; set; }
-    public decimal? PremioTotal { get; set; }
+    public string? Situation { get; set; }
+    public decimal? TotalPrize { get; set; }
 
-    public ICollection<InstallmentEntity> Parcelas { get; set; }
+    public ICollection<InstallmentEntity> Installments { get; set; }
 
-    public PolicyEntity(int policyID, string descricao, string cpf
-        , string situacao, decimal premioTotal
-        , ICollection<InstallmentEntity> parcelas) : base(policyID)
+    public PolicyEntity(int policyID, string description, string cpf
+        , string situation, decimal totalPrize
+        , ICollection<InstallmentEntity> installments) : base(policyID)
     {
-        Descricao = descricao;
+        Description = description;
         Cpf = cpf;
-        Situacao = situacao;
-        PremioTotal = premioTotal;
-        Parcelas = parcelas;
+        Situation = situation;
+        TotalPrize = totalPrize;
+        Installments = installments;
     }
 
     //Exclusivo para o Entity Framework
