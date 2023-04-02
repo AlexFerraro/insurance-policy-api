@@ -23,10 +23,6 @@ public class PolicyDomainService : IPolicyDomainService
     public async Task<IEnumerable<PolicyEntity>> RetrieveAllPoliciesAsync(int skip, int take) =>
         await _policyRepository.GetAllAsync(skip, take);
 
-    /*
-      Pode ser quebrado em dois métodos para mantero SRP, um para atualizar a apólice e outro para atualizar 
-      as parcelas sendo o repositório responsável por alterar as parcelas o installmentRepository.
-    */
     public async Task UpdatePolicyAsync(PolicyEntity policyEntity)
     {
         var policyToUpdate = await _policyRepository.GetByIdAsync(policyEntity.EntityID, false);

@@ -86,6 +86,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<CacheMiddleware>();
 
 app.UseHttpsRedirection();
 
