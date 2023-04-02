@@ -1,5 +1,6 @@
 ﻿using insurance_policy_api_domain.Contracts;
 using insurance_policy_api_domain.Entities;
+using insurance_policy_api_domain.Entities.Installment;
 using insurance_policy_api_domain.Excepitions;
 using insurance_policy_api_domain.Helpers;
 
@@ -8,9 +9,10 @@ namespace insurance_policy_api_domain.Services;
 public class PolicyDomainService : IPolicyDomainService
 {
     private readonly IPolicyRepository _policyRepository;
+    private readonly IInstallmentRepository _installmentRepository;
 
-    public PolicyDomainService(IPolicyRepository policyRepository) =>
-        _policyRepository = policyRepository;
+    public PolicyDomainService(IPolicyRepository policyRepository, IInstallmentRepository installmentRepository) =>
+        (_policyRepository, _installmentRepository) = (policyRepository, installmentRepository);
 
     public async Task CreateNewPolicyAsync(PolicyEntity policyEntity) =>
         await _policyRepository.AddAsync(policyEntity);
@@ -65,8 +67,33 @@ public class PolicyDomainService : IPolicyDomainService
         await _policyRepository.UpdateAsync(policyToUpdate);
     }
 
-    public async Task RegisterPaymentForPolicyAsync(int policyId, DateTime datePagamento)
+    public async Task RegisterPaymentForPolicyAsync(int policyId, DateOnly paidDate)
     {
-        throw new NotImplementedException();
+        var installmentPayment = await _installmentRepository.GetByIdAsync(policyId);
+
+        if (installmentPayment is null)
+            throw new NotFoundException($"Parcela não encontrada no banco de dados.");
+
+        installmentPayment.PaidDate = paidDate;
+        installmentPayment.Situation = "PAGO";
+        installmentPayment.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
+        installmentPayment.UserRecordChange = 3;
+
+        if (installmentPayment.IsInstallmentOverdue())
+        {
+            int daysLate = paidDate.DayNumber - installmentPayment.PaymentDate.Value.DayNumber;
+
+            decimal interestRate = installmentPayment.PaymentMethod.Value switch
+            {
+                PaymentMethod.CARTAO => 0.03m,
+                PaymentMethod.BOLETO => 0.01m,
+                PaymentMethod.DINHEIRO => 0.05m,
+                _ => 0m
+            };
+
+            installmentPayment.Fees = installmentPayment.Premium.Value * interestRate * daysLate;
+        }
+
+        await _installmentRepository.UpdateAsync(installmentPayment);
     }
 }

@@ -13,7 +13,7 @@ public class PolicyRepository : IPolicyRepository
         _policyDbContext = context;
 
     public async Task AddAsync(PolicyEntity policyEntity) =>
-        await _policyDbContext.AddAsync(policyEntity);
+        await _policyDbContext.Policies.AddAsync(policyEntity);
 
 
     public async Task<PolicyEntity> GetByIdAsync(int entityID, bool asNoTracking = true)
@@ -32,7 +32,7 @@ public class PolicyRepository : IPolicyRepository
         await _policyDbContext.Policies.Include(i => i.Installments).Skip(skip).Take(take).ToListAsync();
 
     public async Task UpdateAsync(PolicyEntity policyEntity) =>
-        _policyDbContext.Update(policyEntity);
+        await Task.Run(() => _policyDbContext.Policies.Update(policyEntity));
 
     //Comportamento movido para o UnityOfWork
     //public async Task CommitAsync()

@@ -51,8 +51,10 @@ public class PolicyAppService : IPolicyAppService
         return _mapper.Map<PolicyDTO>(policyEntity);
     }
 
-    public async Task<PolicyDTO> RegisterPaymentAsync(int entityId, DateTime datePagamento)
+    public async Task RegisterPaymentAsync(int entityId, DateOnly datePayment)
     {
-        throw new NotImplementedException();
+        await _policyDomainService.RegisterPaymentForPolicyAsync(entityId, datePayment);
+
+        await _unityOfWork.CommitAsync();
     }
 }

@@ -23,7 +23,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.IdApolice, opt => opt.Ignore())
             .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => Enum.Parse<PaymentMethod>(src.PaymentMethod.ToUpper())))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.PaymentDate)))
             .ForMember(dest => dest.Situation, opt => opt.Ignore())
             .ForMember(dest => dest.Policy, opt => opt.Ignore());
 
@@ -39,7 +39,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
             .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium.Value))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value));
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value.ToString("yyyy-MM-dd")));
 
         CreateMap<PolicyEntity, PolicyDetailsDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
@@ -57,8 +57,8 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
             .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium.Value))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value))
-            .ForMember(dest => dest.PaidDate, opt => opt.MapFrom(src => src.PaidDate.Value))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.PaidDate, opt => opt.MapFrom(src => src.PaidDate.Value.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.Fees, opt => opt.MapFrom(src => src.Fees.Value))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
             .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.RecordCreationDate.Value.ToString("yyyy-MM-dd")))

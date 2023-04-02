@@ -8,5 +8,5 @@ public interface IPolicyAppService
     Task<PolicyDTO> GetPolicyByIdAsync(int entityId);
     Task<IEnumerable<PolicyDetailsDTO>> GetAllPoliciesAsync(int skip, int take);
     Task<PolicyDTO> UpdatePolicyAsync(PolicyDTO policyDto);
-    Task<PolicyDTO> RegisterPaymentAsync(int entityId, DateTime datePagamento);
+    Task RegisterPaymentAsync(int entityId, DateOnly datePayment);
 }

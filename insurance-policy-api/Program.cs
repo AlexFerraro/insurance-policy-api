@@ -28,6 +28,7 @@ builder.Services.AddDbContext<PolicyDbContext>(options =>
 builder.Services.AddScoped<IPolicyAppService, PolicyAppService>();
 builder.Services.AddScoped<IPolicyDomainService, PolicyDomainService>();
 builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
+builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
 builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();
 
 builder.Services.AddControllers();

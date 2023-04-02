@@ -43,7 +43,7 @@ public class ExceptionMiddleware
             NotFoundException { InnerException: InvalidOperationException } =>
                             (HttpStatusCode.BadRequest, "A solicitação não pode ser processada devido que uma das parcelas da apólice informada não existe na base de dados."),
             
-            NotFoundException => (HttpStatusCode.BadRequest, "A solicitação não pode ser processada devido que a apólice informado não existe na base de dados."),
+            NotFoundException => (HttpStatusCode.BadRequest, $"A solicitação não pode ser processada devido ao seguinte ocorrido: { exception.Message }"),
 
             _ => (HttpStatusCode.InternalServerError, "Ocorreu um erro inesperado, entre em contato com o suporte.")
         };

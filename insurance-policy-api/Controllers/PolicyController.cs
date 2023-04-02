@@ -154,25 +154,21 @@ public class PolicyController : ControllerBase
     /// Gera a baixa de uma parcela do pagamento de uma apólice.
     /// </remarks>
     [HttpPost("{id:int}/pagamento")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(LinkDTO[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime datePagamento)
+    public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime paidDate)
     {
-        
+        await _policyAppService.RegisterPaymentAsync(id, DateOnly.FromDateTime(paidDate));
+
         var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
 
-        var response = new ResponseDTO<PolicyDTO>()
+        var response = new LinkDTO[]
         {
-            Data = null,
-            Links = new LinkDTO[]
-            {
             new LinkDTO($"{urlBase}/{id}", "get_policy", "GET"),
             new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
             new LinkDTO($"{urlBase}", "update_policy", "PATCH")
-            }
         };
 
-
-        throw new NotImplementedException();
+        return Ok(response);
     }
 }
