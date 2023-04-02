@@ -15,14 +15,15 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Net.Mime;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<PolicyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection")
-                , options => { options.CommandTimeout(5); }));
+                        , options => { options.CommandTimeout(5); }));
+            //.EnableSensitiveDataLogging()
+            //.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole())));
 
 builder.Services.AddScoped<IPolicyAppService, PolicyAppService>();
 builder.Services.AddScoped<IPolicyDomainService, PolicyDomainService>();

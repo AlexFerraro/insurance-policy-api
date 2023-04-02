@@ -40,10 +40,10 @@ public class PolicyController : ControllerBase
             Data = policyCreated,
             Links = new LinkDTO[]
             {
-                    new LinkDTO($"{urlBase}/{policyCreated.Id}", "get_policy", "GET"),
-                    new LinkDTO($"{urlBase}", "get_all_policy", "GET"),
-                    new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
-                    new LinkDTO($"{urlBase}/{policyCreated.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
+                new LinkDTO($"{urlBase}/{policyCreated.Id}", "get_policy", "GET"),
+                new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
+                new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
+                new LinkDTO($"{urlBase}/{policyCreated.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
             }
         };
 
@@ -57,13 +57,25 @@ public class PolicyController : ControllerBase
     /// Retorna todas as apólices do banco de dados criadas.<br />
     /// </remarks>
     [HttpGet]
-    [ProducesResponseType(typeof(IEnumerable<PolicyDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseDTO<IEnumerable<PolicyDetailsDTO>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllPoliciesAsync([FromQuery][Required] int skip, [FromQuery][Required] int take)
     {
         var policiesReceived = await _policyAppService.GetAllPoliciesAsync(skip, take);
 
-        return Ok(policiesReceived);
+        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+        var response = new ResponseDTO<IEnumerable<PolicyDetailsDTO>>()
+        {
+            Data = policiesReceived,
+            Links = new LinkDTO[]
+            {
+                new LinkDTO($"{urlBase}/{policiesReceived.First().Id}", "get_first_policy", "GET"),
+                new LinkDTO($"{urlBase}/{policiesReceived.Last().Id}", "get_last_policy", "GET")
+            }
+        };
+
+        return Ok(response);
     }
 
     /// <summary>
@@ -89,10 +101,10 @@ public class PolicyController : ControllerBase
         {
             Data = policyReceived,
             Links = new LinkDTO[]
-            {           
-                    new LinkDTO($"{urlBase}", "get_all_policy", "GET"),
-                    new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
-                    new LinkDTO($"{urlBase}/{policyReceived.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
+            {
+                new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
+                new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
+                new LinkDTO($"{urlBase}/{policyReceived.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
             }
         };
 
@@ -106,7 +118,7 @@ public class PolicyController : ControllerBase
     /// Atualiza uma apólice e suas respectivas parcelas no banco de dados.
     /// </remarks>
     [HttpPatch]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdatePolicyAsync([FromBody][Required] PolicyDTO policy)
@@ -114,7 +126,25 @@ public class PolicyController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        throw new NotImplementedException();
+        if (policy.Id is 0)
+            return BadRequest("O ID da apólice não pode ser zero.");
+
+        var updatedPolicy = await _policyAppService.UpdatePolicyAsync(policy);
+
+        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+        var response = new ResponseDTO<PolicyDTO>()
+        {
+            Data = updatedPolicy,
+            Links = new LinkDTO[]
+            {
+                new LinkDTO($"{urlBase}/{updatedPolicy.Id}", "get_policy", "GET"),
+                new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
+                new LinkDTO($"{urlBase}/{updatedPolicy.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
+            }
+        };
+
+        return Ok(response);
     }
 
     /// <summary>
@@ -128,6 +158,21 @@ public class PolicyController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime datePagamento)
     {
+        
+        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+
+        var response = new ResponseDTO<PolicyDTO>()
+        {
+            Data = null,
+            Links = new LinkDTO[]
+            {
+            new LinkDTO($"{urlBase}/{id}", "get_policy", "GET"),
+            new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
+            new LinkDTO($"{urlBase}", "update_policy", "PATCH")
+            }
+        };
+
+
         throw new NotImplementedException();
     }
 }

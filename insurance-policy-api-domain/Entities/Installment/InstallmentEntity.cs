@@ -15,7 +15,6 @@ public class InstallmentEntity : EntityBase<int>
         , MetodoPagamento formaPagamento, DateTime dataPagamento
         , string situacao, PolicyEntity apolice) : base(installmentID)
     {
-        IdApolice = idApolice;
         Premio = premio;
         FormaPagamento = formaPagamento;
         DataPagamento = dataPagamento;

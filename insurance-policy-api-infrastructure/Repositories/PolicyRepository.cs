@@ -16,16 +16,23 @@ public class PolicyRepository : IPolicyRepository
         await _policyDbContext.AddAsync(policyEntity);
 
 
-    public async Task<PolicyEntity> GetByIdAsync(int entityID) =>
-        await _policyDbContext.Policies.Include(i => i.Parcelas).Where(p => p.EntityID == entityID).FirstOrDefaultAsync();
+    public async Task<PolicyEntity> GetByIdAsync(int entityID, bool asNoTracking = true)
+    {
+        return asNoTracking
+            ? await _policyDbContext.Policies
+                                .Include(p => p.Parcelas)
+                                .FirstOrDefaultAsync(f => f.EntityID == entityID)
+            : await _policyDbContext.Policies.AsTracking()
+                                .Include(p => p.Parcelas)
+                                .FirstOrDefaultAsync(f => f.EntityID == entityID);
+    }
+
 
     public async Task<IEnumerable<PolicyEntity>> GetAllAsync(int skip, int take) =>
         await _policyDbContext.Policies.Include(i => i.Parcelas).Skip(skip).Take(take).ToListAsync();
 
-    public async Task UpdateAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task UpdateAsync(PolicyEntity policyEntity) =>
+        _policyDbContext.Update(policyEntity);
 
     //Comportamento movido para o UnityOfWork
     //public async Task CommitAsync()

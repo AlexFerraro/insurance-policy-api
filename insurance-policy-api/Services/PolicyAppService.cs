@@ -32,12 +32,23 @@ public class PolicyAppService : IPolicyAppService
     public async Task<PolicyDTO> GetPolicyByIdAsync(int entityId) =>
         _mapper.Map<PolicyDTO>(await _policyDomainService.RetrievePolicyByIdAsync(entityId));
 
-    public async Task<IEnumerable<PolicyEntity>> GetAllPoliciesAsync(int skip, int take) =>
-        await _policyDomainService.RetrieveAllPoliciesAsync(skip, take);
-
-    public async Task UpdatePolicyAsync()
+    public async Task<IEnumerable<PolicyDetailsDTO>> GetAllPoliciesAsync(int skip, int take)   
     {
-        throw new NotImplementedException();
+        var policies = await _policyDomainService.RetrieveAllPoliciesAsync(skip, take);
+
+        return _mapper.Map<IEnumerable<PolicyDetailsDTO>>(policies);
+    }
+        
+
+    public async Task<PolicyDTO> UpdatePolicyAsync(PolicyDTO policyDto)
+    {
+        var policyEntity = _mapper.Map<PolicyEntity>(policyDto);
+
+        await _policyDomainService.UpdatePolicyAsync(policyEntity);
+
+        await _unityOfWork.CommitAsync();
+
+        return _mapper.Map<PolicyDTO>(policyEntity);
     }
 
     public async Task<PolicyDTO> RegisterPaymentAsync(int entityId, DateTime datePagamento)

@@ -41,9 +41,36 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.FormaPagamento.ToString().ToUpper()))
             .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.DataPagamento.Value));
 
+        CreateMap<PolicyEntity, PolicyDetailsDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Descricao))
+            .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => long.Parse(src.Cpf)))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situacao))
+            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.PremioTotal))
+            .ForMember(dest => dest.DataCriacaoRegistro, opt => opt.MapFrom(src => src.DataCriacaoRegistro.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.DataAlteracaoRegistro, opt => opt.MapFrom(src => src.DataAlteracaoRegistro.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.UsuarioCriacaoRegistro, opt => opt.MapFrom(src => src.UsuarioCriacaoRegistro))
+            .ForMember(dest => dest.UsuarioAlteracaoRegistro, opt => opt.MapFrom(src => src.UsuarioAlteracaoRegistro))
+            .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Parcelas));
+
+        CreateMap<InstallmentEntity, InstallmentDetailsDTO>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
+            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premio.Value))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.FormaPagamento.ToString().ToUpper()))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.DataPagamento.Value))
+            .ForMember(dest => dest.DataPaid, opt => opt.MapFrom(src => src.DataPago.Value))
+            .ForMember(dest => dest.Fees, opt => opt.MapFrom(src => src.Juros.Value))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situacao))
+            .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.DataCriacaoRegistro.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.RecordModificationDate, opt => opt.MapFrom(src => src.DataAlteracaoRegistro.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.RecordCreatedByUser, opt => opt.MapFrom(src => src.UsuarioCriacaoRegistro))
+            .ForMember(dest => dest.RecordModifiedByUser, opt => opt.MapFrom(src => src.UsuarioAlteracaoRegistro));
+
         CreateMap<IEnumerable<PolicyDTO>, Collection<PolicyEntity>>();
         CreateMap<IEnumerable<PolicyEntity>, Collection<PolicyDTO>>();
         CreateMap<IEnumerable<InstallmentDTO>, Collection<InstallmentEntity>>();
         CreateMap<IEnumerable<InstallmentEntity>, Collection<InstallmentDTO>>();
+        CreateMap<IEnumerable<PolicyEntity>, Collection<PolicyDetailsDTO>>();
+        CreateMap<IEnumerable<InstallmentEntity>, Collection<InstallmentDetailsDTO>>();
     }
 }
