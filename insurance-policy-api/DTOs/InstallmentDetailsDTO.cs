@@ -7,10 +7,10 @@ public record class InstallmentDetailsDTO : InstallmentDTO
     [JsonPropertyName("dataPago")]
     [JsonPropertyOrderAttribute(5)]
     public DateTime? PaidDate { get; set; } = null;
-    
+
     [JsonPropertyName("juros")]
     [JsonPropertyOrderAttribute(6)]
-    public decimal? Fees { get; set; } = null;
+    public decimal? Interest { get; set; } = null;
 
     [JsonPropertyName("situacao")]
     [JsonPropertyOrderAttribute(7)]

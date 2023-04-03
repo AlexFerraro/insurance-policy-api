@@ -24,4 +24,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\insurance-policy-api-domain\insurance-policy-api-domain.csproj" />
+  </ItemGroup>
+
 </Project>

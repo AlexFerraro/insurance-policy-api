@@ -22,8 +22,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PolicyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection")
                         , options => { options.CommandTimeout(5); }));
-            //.EnableSensitiveDataLogging()
-            //.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole())));
+//.EnableSensitiveDataLogging()
+//.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole())));
 
 builder.Services.AddScoped<IPolicyAppService, PolicyAppService>();
 builder.Services.AddScoped<IPolicyDomainService, PolicyDomainService>();

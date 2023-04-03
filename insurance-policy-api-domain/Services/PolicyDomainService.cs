@@ -25,7 +25,7 @@ public class PolicyDomainService : IPolicyDomainService
 
     public async Task UpdatePolicyAsync(PolicyEntity policyEntity)
     {
-        var policyToUpdate = await _policyRepository.GetByIdAsync(policyEntity.EntityID, false);
+        var policyToUpdate = await _policyRepository.GetByIdAsync(policyEntity.EntityID);
 
         if (policyToUpdate is null)
             throw new NotFoundException($"Apólice não encontrada no banco de dados.");
@@ -37,7 +37,7 @@ public class PolicyDomainService : IPolicyDomainService
         policyToUpdate.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
         policyToUpdate.UserRecordChange = 2;
 
-        if (!policyEntity.Installments.IsNullOrEmpty()) 
+        if (!policyEntity.Installments.IsNullOrEmpty())
         {
             try
             {
@@ -45,7 +45,7 @@ public class PolicyDomainService : IPolicyDomainService
                     .ForEach(installmentNew =>
                     {
                         var installmentToUpdate = policyToUpdate.Installments
-                                        .First(f => installmentNew.EntityID == f.EntityID );
+                                        .First(f => installmentNew.EntityID == f.EntityID);
 
                         installmentToUpdate.Premium = installmentNew.Premium;
                         installmentToUpdate.PaymentMethod = installmentNew.PaymentMethod;
@@ -87,7 +87,7 @@ public class PolicyDomainService : IPolicyDomainService
                 _ => 0m
             };
 
-            installmentPayment.Fees = installmentPayment.Premium.Value * interestRate * daysLate;
+            installmentPayment.Interest = installmentPayment.Premium.Value * interestRate * daysLate;
         }
 
         await _installmentRepository.UpdateAsync(installmentPayment);

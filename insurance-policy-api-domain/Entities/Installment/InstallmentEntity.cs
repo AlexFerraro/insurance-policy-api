@@ -7,7 +7,7 @@ public class InstallmentEntity : EntityBase<int>
     public PaymentMethod? PaymentMethod { get; set; }
     public DateOnly? PaymentDate { get; set; }
     public DateOnly? PaidDate { get; set; } = null;
-    public decimal? Fees { get; set; } = null;
+    public decimal? Interest { get; set; } = null;
     public string? Situation { get; set; } = null;
     public PolicyEntity? Policy { get; set; }
 

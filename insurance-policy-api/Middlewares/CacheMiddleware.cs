@@ -16,8 +16,8 @@ public class CacheMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-         if (context.Request.Method.Equals("GET"))
-         {
+        if (context.Request.Method.Equals("GET"))
+        {
             var cacheKey = context.Request.GetEncodedPathAndQuery();
 
             //if (context.Request.Headers.TryGetValue("Cache-Control", out var cacheControl) 

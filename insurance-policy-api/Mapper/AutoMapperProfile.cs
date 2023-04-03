@@ -59,7 +59,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
             .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.PaidDate, opt => opt.MapFrom(src => src.PaidDate.Value.ToString("yyyy-MM-dd")))
-            .ForMember(dest => dest.Fees, opt => opt.MapFrom(src => src.Fees.Value))
+            .ForMember(dest => dest.Interest, opt => opt.MapFrom(src => src.Interest.Value))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
             .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.RecordCreationDate.Value.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.RecordModificationDate, opt => opt.MapFrom(src => src.RegistrationChangeDate.Value.ToString("yyyy-MM-dd")))

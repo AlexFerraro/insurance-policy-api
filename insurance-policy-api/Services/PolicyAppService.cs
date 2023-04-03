@@ -16,7 +16,7 @@ public class PolicyAppService : IPolicyAppService
     public PolicyAppService(IPolicyDomainService policyDomainService
                                 , IUnityOfWork unityOfWork, IMapper mapper) =>
         (_policyDomainService, _unityOfWork, _mapper) = (policyDomainService, unityOfWork, mapper);
-    
+
 
     public async Task<PolicyDTO> CreatePolicyAsync(PolicyDTO policyDto)
     {
@@ -32,13 +32,13 @@ public class PolicyAppService : IPolicyAppService
     public async Task<PolicyDTO> GetPolicyByIdAsync(int entityId) =>
         _mapper.Map<PolicyDTO>(await _policyDomainService.RetrievePolicyByIdAsync(entityId));
 
-    public async Task<IEnumerable<PolicyDetailsDTO>> GetAllPoliciesAsync(int skip, int take)   
+    public async Task<IEnumerable<PolicyDetailsDTO>> GetAllPoliciesAsync(int skip, int take)
     {
         var policies = await _policyDomainService.RetrieveAllPoliciesAsync(skip, take);
 
         return _mapper.Map<IEnumerable<PolicyDetailsDTO>>(policies);
     }
-        
+
 
     public async Task<PolicyDTO> UpdatePolicyAsync(PolicyDTO policyDto)
     {

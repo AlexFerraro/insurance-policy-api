@@ -70,11 +70,11 @@ public partial class PolicyDbContext : DbContext
             entity.Property(e => e.PaymentMethod)
             .HasConversion(
                     v => v.ToString(),
-                    v => (PaymentMethod) Enum.Parse(typeof(PaymentMethod), v))
+                    v => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), v))
                 .HasMaxLength(50)
                 .HasColumnName("forma_pagamento");
             entity.Property(e => e.IdApolice).HasColumnName("id_apolice");
-            entity.Property(e => e.Fees)
+            entity.Property(e => e.Interest)
                 .HasPrecision(10, 2)
                 .HasColumnName("juros");
             entity.Property(e => e.Premium)
