@@ -2,7 +2,7 @@
 
 namespace insurance_policy_api_domain.Contracts;
 
-public interface IPolicyRepository
+public interface IPolicyRepository : IDisposable
 {
     Task AddAsync(PolicyEntity policyEntity);
     Task<PolicyEntity> GetByIdAsync(int entityID);

@@ -50,11 +50,4 @@ public class PolicyAppService : IPolicyAppService
 
         return _mapper.Map<PolicyDTO>(policyEntity);
     }
-
-    public async Task RegisterPaymentAsync(int entityId, DateOnly datePayment)
-    {
-        await _policyDomainService.RegisterPaymentForPolicyAsync(entityId, datePayment);
-
-        await _unityOfWork.CommitAsync();
-    }
 }

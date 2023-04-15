@@ -8,5 +8,4 @@ public interface IPolicyDomainService
     Task<PolicyEntity> RetrievePolicyByIdAsync(int policyId);
     Task<IEnumerable<PolicyEntity>> RetrieveAllPoliciesAsync(int skip, int take);
     Task UpdatePolicyAsync(PolicyEntity policyEntity);
-    Task RegisterPaymentForPolicyAsync(int policyId, DateOnly datePayment);
 }

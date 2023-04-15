@@ -9,7 +9,7 @@ public class PolicyEntity : EntityBase<int>
     public string? Situation { get; set; }
     public decimal? TotalPrize { get; set; }
 
-    public ICollection<InstallmentEntity> Installments { get; set; }
+    public virtual ICollection<InstallmentEntity> Installments { get; set; }
 
     public PolicyEntity(int policyID, string description, string cpf
         , string situation, decimal totalPrize

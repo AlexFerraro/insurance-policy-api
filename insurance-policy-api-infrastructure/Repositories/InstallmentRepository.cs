@@ -18,4 +18,9 @@ public class InstallmentRepository : IInstallmentRepository
 
     public async Task UpdateAsync(InstallmentEntity installmentEntity) =>
         await Task.Run(() => _policyDbContext.Installmenties.Update(installmentEntity));
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
 }
