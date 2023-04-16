@@ -9,11 +9,10 @@ public class InstallmentAppService : IInstallmentAppService
 {
     private readonly IInstallmentDomainService _installmentDomainService;
     private readonly IUnityOfWork _unityOfWork;
-    private readonly IMapper _mapper;
 
     public InstallmentAppService(IInstallmentDomainService installmentDomainService
-                                    , IUnityOfWork unityOfWork, IMapper mapper) =>
-        (_installmentDomainService, _unityOfWork, _mapper) = (installmentDomainService, unityOfWork, mapper);
+                                    , IUnityOfWork unityOfWork) =>
+        (_installmentDomainService, _unityOfWork) = (installmentDomainService, unityOfWork);
 
 
     public async Task RegisterPaymentAsync(int entityId, DateOnly datePayment)

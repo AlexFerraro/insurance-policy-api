@@ -19,6 +19,9 @@ public class InstallmentRepository : IInstallmentRepository
     public async Task UpdateAsync(InstallmentEntity installmentEntity) =>
         await Task.Run(() => _policyDbContext.Installmenties.Update(installmentEntity));
 
+    public async Task UpdateRangeAsync(IEnumerable<InstallmentEntity> installmentiesEntity) =>
+        await Task.Run(() => _policyDbContext.Installmenties.UpdateRange(installmentiesEntity));
+
     public void Dispose()
     {
         GC.SuppressFinalize(this);

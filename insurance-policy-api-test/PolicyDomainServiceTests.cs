@@ -120,7 +120,7 @@ public class PolicyDomainServiceTests
             .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(installmentEntity);
 
-        Assert.ThrowsAsync<NotFoundException>(async () => await _policyDomainService.RegisterPaymentForPolicyAsync(1, new DateOnly()));
+        Assert.ThrowsAsync<PolicyNotFoundException>(async () => await _policyDomainService.RegisterPaymentForPolicyAsync(1, new DateOnly()));
     }
 
     [Test]
@@ -250,7 +250,7 @@ public class PolicyDomainServiceTests
 
         _policyRepositoryMock.Setup(s => s.GetByIdAsync(2)).ReturnsAsync(policyEntity);
 
-        var ex = Assert.ThrowsAsync<NotFoundException>(async () => await _policyDomainService.UpdatePolicyAsync(policyEntity));
+        var ex = Assert.ThrowsAsync<PolicyNotFoundException>(async () => await _policyDomainService.UpdatePolicyAsync(policyEntity));
 
         Assert.AreEqual("Apólice não encontrada no banco de dados.", ex.Message);
     }

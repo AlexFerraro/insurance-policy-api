@@ -11,12 +11,28 @@ public class InstallmentDomainService : IInstallmentDomainService
     public InstallmentDomainService(IInstallmentRepository installmentRepository) =>
         _installmentRepository = installmentRepository;
 
+    public async Task UpdateInstallmentiesAsync(IEnumerable<InstallmentEntity> installmentiesToUpdate)
+    {
+        foreach (var installment in installmentiesToUpdate)
+        {
+            var existingInstallment = await _installmentRepository.GetByIdAsync(installment.EntityID);
+
+            if (existingInstallment is null)
+                throw new InstallmentNotFoundException($"A parcela com Id {installment.EntityID} não foi encontrada no banco de dados.");
+        }
+
+        await _installmentRepository.UpdateRangeAsync(installmentiesToUpdate);
+    }
+
     public async Task RegisterPaymentForPolicyAsync(int policyId, DateOnly paidDate)
     {
         var installmentPayment = await _installmentRepository.GetByIdAsync(policyId);
 
         if (installmentPayment is null)
-            throw new NotFoundException($"Parcela não encontrada no banco de dados.");
+            throw new InstallmentNotFoundException("A parcela informada não foi encontrada.");
+
+        if (installmentPayment.IsPaid())
+            throw new PaymentAlreadyMadeException("A parcela informada já se encontra paga.");
 
         installmentPayment.PaidDate = paidDate;
         installmentPayment.Situation = "PAGO";

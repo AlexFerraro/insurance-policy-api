@@ -10,12 +10,14 @@ namespace insurance_policy_api.Services;
 public class PolicyAppService : IPolicyAppService
 {
     private readonly IPolicyDomainService _policyDomainService;
+    private readonly IInstallmentDomainService _installmentDomainService;
     private readonly IUnityOfWork _unityOfWork;
     private readonly IMapper _mapper;
 
-    public PolicyAppService(IPolicyDomainService policyDomainService
-                                , IUnityOfWork unityOfWork, IMapper mapper) =>
-        (_policyDomainService, _unityOfWork, _mapper) = (policyDomainService, unityOfWork, mapper);
+    public PolicyAppService(IPolicyDomainService policyDomainService, IInstallmentDomainService installmentDomainService
+                                , IUnityOfWork unityOfWork, IMapper mapper) 
+        => (_policyDomainService, _installmentDomainService, _unityOfWork, _mapper) 
+                = (policyDomainService, installmentDomainService, unityOfWork, mapper);
 
 
     public async Task<PolicyDTO> CreatePolicyAsync(PolicyDTO policyDto)
@@ -45,9 +47,16 @@ public class PolicyAppService : IPolicyAppService
         var policyEntity = _mapper.Map<PolicyEntity>(policyDto);
 
         await _policyDomainService.UpdatePolicyAsync(policyEntity);
+        await UpdatePolicyInstallmentiesAsync(policyEntity);
 
         await _unityOfWork.CommitAsync();
 
         return _mapper.Map<PolicyDTO>(policyEntity);
+    }
+
+    private async Task UpdatePolicyInstallmentiesAsync(PolicyEntity policyEntity)
+    {
+        if (policyEntity.Installments is not null)
+            await _installmentDomainService.UpdateInstallmentiesAsync(policyEntity.Installments);
     }
 }

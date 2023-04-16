@@ -40,10 +40,10 @@ public class ExceptionMiddleware
             DbUpdateException { InnerException: NpgsqlException } =>
                 (HttpStatusCode.InternalServerError, "A solicitação não pôde ser processada devido a um erro no banco de dados."),
 
-            NotFoundException { InnerException: InvalidOperationException } =>
+            PolicyNotFoundException { InnerException: InvalidOperationException } =>
                             (HttpStatusCode.BadRequest, "A solicitação não pode ser processada devido que uma das parcelas da apólice informada não existe na base de dados."),
 
-            NotFoundException => (HttpStatusCode.BadRequest, $"A solicitação não pode ser processada devido ao seguinte ocorrido: {exception.Message}"),
+            PolicyNotFoundException => (HttpStatusCode.BadRequest, $"A solicitação não pode ser processada devido ao seguinte ocorrido: {exception.Message}"),
 
             _ => (HttpStatusCode.InternalServerError, "Ocorreu um erro inesperado, entre em contato com o suporte.")
         };

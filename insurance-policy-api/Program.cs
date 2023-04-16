@@ -22,12 +22,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<PolicyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection")
-                        , options => { options.CommandTimeout(5); }));
+                        , options => { options.CommandTimeout(3); }));
 //.EnableSensitiveDataLogging()
 //.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole())));
 
 builder.Services.AddScoped<IPolicyAppService, PolicyAppService>();
+builder.Services.AddScoped<IInstallmentAppService, InstallmentAppService>();
 builder.Services.AddScoped<IPolicyDomainService, PolicyDomainService>();
+builder.Services.AddScoped<IInstallmentDomainService, InstallmentDomainService>();
 builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
 builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
 builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();

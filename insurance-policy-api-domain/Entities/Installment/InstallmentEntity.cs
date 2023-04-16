@@ -30,4 +30,7 @@ public class InstallmentEntity : EntityBase<int>
 
     internal bool IsInstallmentOverdue() =>
         PaidDate > PaymentDate;
+
+    internal bool IsPaid() =>
+        Situation is "PAGO";
 }

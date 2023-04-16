@@ -6,4 +6,5 @@ public interface IInstallmentRepository : IDisposable
 {
     Task<InstallmentEntity> GetByIdAsync(int entityID);
     Task UpdateAsync(InstallmentEntity installmentEntity);
+    Task UpdateRangeAsync(IEnumerable<InstallmentEntity> installmentiesEntity);
 }

@@ -123,7 +123,7 @@ public class PolicyController : ControllerBase
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdatePolicyAsync([FromBody][Required] PolicyDTO policy)
+    public async Task<IActionResult> UpdatePolicyAsync([FromBody][Required] PolicyDTO policy) //problema ao valdar parcelas nulas?
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

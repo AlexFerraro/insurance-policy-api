@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace insurance_policy_api.DTOs;
 
-public record class PolicyDTO : PolicyBaseDTO
+public record class PolicyDTO : PolicyBaseDTO //problema ao valdar parcelas nulas?
 {
     [JsonPropertyName("parcelas")]
     [JsonPropertyOrderAttribute(6)]
