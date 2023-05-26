@@ -1,6 +1,5 @@
 ﻿using insurance_policy_api.DTOs;
 using insurance_policy_api.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
@@ -10,7 +9,6 @@ namespace insurance_policy_api.Controllers;
 [ApiController]
 [Route("v1/api/apolice")]
 [Produces(Application.Json)]
-[Authorize]
 public class PolicyController : ControllerBase
 {
     private readonly IPolicyAppService _policyAppService;
@@ -56,7 +54,7 @@ public class PolicyController : ControllerBase
     /// Busca todas as apólices registradas.
     /// </summary>
     /// <remarks>
-    /// Retorna todas as apólices do banco de dados criadas.<br />
+    /// Retorna todas as apólices do banco de dados criadas de forma paginável.<br />
     /// </remarks>
     [HttpGet]
     [ProducesResponseType(typeof(ResponseDTO<IEnumerable<PolicyDetailsDTO>>), StatusCodes.Status200OK)]
@@ -117,13 +115,13 @@ public class PolicyController : ControllerBase
     /// Atualiza uma apólice e parcelas.
     /// </summary>
     /// <remarks>
-    /// Atualiza uma apólice e suas respectivas parcelas no banco de dados.
+    /// Atualiza uma apólice e suas respectivas parcelas no banco de dados. Se o array de parcelas fornecido for nulo, apenas a apólice será atualizada.<br />
     /// </remarks>
     [HttpPatch]
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdatePolicyAsync([FromBody][Required] PolicyDTO policy) //problema ao valdar parcelas nulas?
+    public async Task<IActionResult> UpdatePolicyAsync([FromBody][Required] PolicyDTO policy)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

@@ -1,6 +1,5 @@
 ﻿using insurance_policy_api.DTOs;
 using insurance_policy_api.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
@@ -10,7 +9,6 @@ namespace insurance_policy_api.Controllers;
 [ApiController]
 [Route("v1/api/parcela")]
 [Produces(Application.Json)]
-[Authorize]
 public class InstallmentController : ControllerBase
 {
     /// <summary>
@@ -21,6 +19,8 @@ public class InstallmentController : ControllerBase
     /// </remarks>
     [HttpPost("{id:int}/pagamento")]
     [ProducesResponseType(typeof(LinkDTO[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime paidDate
                                                             , [FromServices] IInstallmentAppService _installmentAppService)

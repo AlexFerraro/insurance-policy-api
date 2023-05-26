@@ -25,7 +25,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ocorreu uma exceção não tratada.");
+            _logger.LogError(ex, "Ocorreu uma exceção durante a execução da request");
             await HandleExceptionAsync(httpContext, ex);
         }
     }
@@ -35,17 +35,18 @@ public class ExceptionMiddleware
         var (statusCode, message) = exception switch
         {
             DbUpdateException { InnerException: NpgsqlException { InnerException: TimeoutException } } =>
-                (HttpStatusCode.RequestTimeout, "A solicitação não pôde ser processada devido ao timeout na conexão com o banco de dados."),
+                (HttpStatusCode.RequestTimeout, "The request could not be processed due to a timeout in the database connection."),
 
             DbUpdateException { InnerException: NpgsqlException } =>
-                (HttpStatusCode.InternalServerError, "A solicitação não pôde ser processada devido a um erro no banco de dados."),
+                (HttpStatusCode.InternalServerError, "The request could not be processed due to a database error."),
 
-            PolicyNotFoundException { InnerException: InvalidOperationException } =>
-                            (HttpStatusCode.BadRequest, "A solicitação não pode ser processada devido que uma das parcelas da apólice informada não existe na base de dados."),
+            PolicyNotFoundException => (HttpStatusCode.NotFound, exception.Message),
 
-            PolicyNotFoundException => (HttpStatusCode.BadRequest, $"A solicitação não pode ser processada devido ao seguinte ocorrido: {exception.Message}"),
+            InstallmentNotFoundException => (HttpStatusCode.NotFound, exception.Message),
 
-            _ => (HttpStatusCode.InternalServerError, "Ocorreu um erro inesperado, entre em contato com o suporte.")
+            PaymentAlreadyMadeException => (HttpStatusCode.Conflict, exception.Message),
+
+            _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred. Please contact support.")
         };
 
         context.Response.StatusCode = (int)statusCode;

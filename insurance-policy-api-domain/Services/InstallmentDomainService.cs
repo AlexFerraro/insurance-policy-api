@@ -18,7 +18,7 @@ public class InstallmentDomainService : IInstallmentDomainService
             var existingInstallment = await _installmentRepository.GetByIdAsync(installment.EntityID);
 
             if (existingInstallment is null)
-                throw new InstallmentNotFoundException($"A parcela com Id {installment.EntityID} não foi encontrada no banco de dados.");
+                throw new InstallmentNotFoundException($"The installment with ID {installment.EntityID} was not found in the database during the request to update the installments of a policy.");
         }
 
         await _installmentRepository.UpdateRangeAsync(installmentiesToUpdate);
@@ -29,10 +29,10 @@ public class InstallmentDomainService : IInstallmentDomainService
         var installmentPayment = await _installmentRepository.GetByIdAsync(policyId);
 
         if (installmentPayment is null)
-            throw new InstallmentNotFoundException("A parcela informada não foi encontrada.");
+            throw new InstallmentNotFoundException($"The installment with ID {policyId} was not found in the database during the payment registration.");
 
         if (installmentPayment.IsPaid())
-            throw new PaymentAlreadyMadeException("A parcela informada já se encontra paga.");
+            throw new PaymentAlreadyMadeException($"The installment with ID {policyId} is already paid and it is not possible to make the payment again.");
 
         installmentPayment.PaidDate = paidDate;
         installmentPayment.Situation = "PAGO";

@@ -41,7 +41,6 @@ public class PolicyAppService : IPolicyAppService
         return _mapper.Map<IEnumerable<PolicyDetailsDTO>>(policies);
     }
 
-
     public async Task<PolicyDTO> UpdatePolicyAsync(PolicyDTO policyDto)
     {
         var policyEntity = _mapper.Map<PolicyEntity>(policyDto);

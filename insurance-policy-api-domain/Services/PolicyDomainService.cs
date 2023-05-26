@@ -1,7 +1,6 @@
 ﻿using insurance_policy_api_domain.Contracts;
 using insurance_policy_api_domain.Entities;
 using insurance_policy_api_domain.Excepitions;
-using insurance_policy_api_domain.Helpers;
 
 namespace insurance_policy_api_domain.Services;
 
@@ -26,7 +25,7 @@ public class PolicyDomainService : IPolicyDomainService
         var existingPolicy = await _policyRepository.GetByIdAsync(policyEntityToUpdate.EntityID);
 
         if (existingPolicy is null)
-            throw new PolicyNotFoundException("Apólice não encontrada durante a atualização.");
+            throw new PolicyNotFoundException($"A policy with ID {policyEntityToUpdate.EntityID} was not found in the database during the policy update request.");
 
         await _policyRepository.UpdateAsync(policyEntityToUpdate);
     }
