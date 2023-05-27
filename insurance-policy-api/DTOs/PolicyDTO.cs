@@ -7,6 +7,6 @@ public record class PolicyDTO : PolicyBaseDTO
 {
     [JsonPropertyName("parcelas")]
     [JsonPropertyOrderAttribute(6)]
-    [MinLength(1, ErrorMessage = "A apólice necessita ter ao menos uma parcela!")]
+    [MinLength(1, ErrorMessage = "The policy needs to have at least one installment in order to be created.")]
     public IEnumerable<InstallmentDTO>? Installments { get; init; }
 }

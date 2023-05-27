@@ -31,6 +31,9 @@ public class PolicyController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        if(policy.Installments is null)
+            return BadRequest("The policy needs to have at least one installment in order to be created.");
+
         var policyCreated = await _policyAppService.CreatePolicyAsync(policy);
 
         var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
