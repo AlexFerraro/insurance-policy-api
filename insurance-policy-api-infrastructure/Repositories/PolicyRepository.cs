@@ -8,7 +8,6 @@ namespace insurance_policy_api_infrastructure.Repositories;
 public class PolicyRepository : IPolicyRepository
 {
     private readonly PolicyDbContext _policyDbContext;
-    private bool disposedValue;
 
     public PolicyRepository(PolicyDbContext context) =>
         _policyDbContext = context;
@@ -17,9 +16,8 @@ public class PolicyRepository : IPolicyRepository
         await _policyDbContext.Policies.AddAsync(policyEntity);
 
     public async Task<PolicyEntity> GetByIdAsync(int entityID) =>
-        await _policyDbContext.Policies
-                .FirstOrDefaultAsync(f => f.EntityID == entityID);
-
+        await _policyDbContext.Policies.Include(i => i.Installments).FirstOrDefaultAsync(f => f.EntityID == entityID);
+                   
     public async Task<IEnumerable<PolicyEntity>> GetAllAsync(int skip, int take) =>
         await _policyDbContext.Policies.Include(i => i.Installments).Skip(skip).Take(take).ToListAsync();
 

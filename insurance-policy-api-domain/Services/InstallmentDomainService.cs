@@ -24,7 +24,7 @@ public class InstallmentDomainService : IInstallmentDomainService
         await _installmentRepository.UpdateRangeAsync(installmentiesToUpdate);
     }
 
-    public async Task RegisterPaymentForPolicyAsync(int policyId, DateOnly paidDate)
+    public async Task RegisterPaymentAsync(int policyId, DateOnly paidDate)
     {
         var installmentPayment = await _installmentRepository.GetByIdAsync(policyId);
 
@@ -34,26 +34,39 @@ public class InstallmentDomainService : IInstallmentDomainService
         if (installmentPayment.IsPaid())
             throw new PaymentAlreadyMadeException($"The installment with ID {policyId} is already paid and it is not possible to make the payment again.");
 
-        installmentPayment.PaidDate = paidDate;
-        installmentPayment.Situation = "PAGO";
-        installmentPayment.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
-        installmentPayment.UserRecordChange = 3;
+        UpdateInstallmentPaymentData(installmentPayment, paidDate);
 
         if (installmentPayment.IsInstallmentOverdue())
         {
-            int daysLate = paidDate.DayNumber - installmentPayment.PaymentDate.Value.DayNumber;
-
-            decimal interestRate = installmentPayment.PaymentMethod.Value switch
-            {
-                PaymentMethod.CARTAO => 0.03m,
-                PaymentMethod.BOLETO => 0.01m,
-                PaymentMethod.DINHEIRO => 0.05m,
-                _ => 0m
-            };
-
-            installmentPayment.Interest = installmentPayment.Premium.Value * interestRate * daysLate;
+            ApplyInterestIfOverdue(installmentPayment, paidDate);
         }
 
         await _installmentRepository.UpdateAsync(installmentPayment);
     }
-}
+
+    private void UpdateInstallmentPaymentData(InstallmentEntity installmentPayment, DateOnly paidDate)
+    {
+        installmentPayment.PaidDate = paidDate;
+        installmentPayment.Situation = "PAGO";
+        installmentPayment.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
+        installmentPayment.UserRecordChange = 3;
+    }
+
+    private void ApplyInterestIfOverdue(InstallmentEntity installmentPayment, DateOnly paidDate)
+    {
+        int daysLate = paidDate.DayNumber - installmentPayment.PaymentDate.Value.DayNumber;
+        decimal interestRate = GetInterestRate(installmentPayment.PaymentMethod.Value);
+        installmentPayment.Interest = installmentPayment.Premium.Value * interestRate * daysLate;   
+    }
+
+    private decimal GetInterestRate(PaymentMethod paymentMethod)
+    {
+        return paymentMethod switch
+        {
+            PaymentMethod.CARTAO => 0.03m,
+            PaymentMethod.BOLETO => 0.01m,
+            PaymentMethod.DINHEIRO => 0.05m,
+            _ => 0m
+        };
+    }
+} 

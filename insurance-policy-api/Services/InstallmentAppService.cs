@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using insurance_policy_api.Interfaces;
+﻿using insurance_policy_api.Interfaces;
 using insurance_policy_api_domain.Contracts;
 using insurance_policy_api_infrastructure.Interfaces;
 
@@ -15,9 +14,9 @@ public class InstallmentAppService : IInstallmentAppService
         (_installmentDomainService, _unityOfWork) = (installmentDomainService, unityOfWork);
 
 
-    public async Task RegisterPaymentAsync(int entityId, DateOnly datePayment)
+    public async Task RegisterPaymentForPolicyAsync(int entityId, DateOnly datePayment)
     {
-        await _installmentDomainService.RegisterPaymentForPolicyAsync(entityId, datePayment);
+        await _installmentDomainService.RegisterPaymentAsync(entityId, datePayment);
 
         await _unityOfWork.CommitAsync();
     }

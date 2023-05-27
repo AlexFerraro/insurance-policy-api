@@ -13,14 +13,14 @@ public class InstallmentRepository : IInstallmentRepository
         _policyDbContext = context;
 
     public async Task<InstallmentEntity> GetByIdAsync(int entityID) =>
-        await _policyDbContext.Installmenties
+        await _policyDbContext.Installments
                     .FirstOrDefaultAsync(installment => installment.EntityID == entityID);
 
     public async Task UpdateAsync(InstallmentEntity installmentEntity) =>
-        await Task.Run(() => _policyDbContext.Installmenties.Update(installmentEntity));
+        await Task.Run(() => _policyDbContext.Installments.Update(installmentEntity));
 
     public async Task UpdateRangeAsync(IEnumerable<InstallmentEntity> installmentiesEntity) =>
-        await Task.Run(() => _policyDbContext.Installmenties.UpdateRange(installmentiesEntity));
+        await Task.Run(() => _policyDbContext.Installments.UpdateRange(installmentiesEntity));
 
     public void Dispose()
     {

@@ -14,8 +14,15 @@ public class PolicyDomainService : IPolicyDomainService
     public async Task CreateNewPolicyAsync(PolicyEntity policyEntity) =>
         await _policyRepository.AddAsync(policyEntity);
 
-    public async Task<PolicyEntity> RetrievePolicyByIdAsync(int policyId) =>
-        await _policyRepository.GetByIdAsync(policyId);
+    public async Task<PolicyEntity> RetrievePolicyByIdAsync(int policyId) 
+    { 
+        var recoveredPolicy = await _policyRepository.GetByIdAsync(policyId);
+
+        if (recoveredPolicy is null)
+            throw new PolicyNotFoundException($"A policy with ID {policyId} was not found in the database during the policy update request.");
+
+        return recoveredPolicy;
+    }
 
     public async Task<IEnumerable<PolicyEntity>> RetrieveAllPoliciesAsync(int skip, int take) =>
         await _policyRepository.GetAllAsync(skip, take);

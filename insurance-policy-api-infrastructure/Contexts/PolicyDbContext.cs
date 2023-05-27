@@ -18,7 +18,7 @@ public partial class PolicyDbContext : DbContext
 
     public virtual DbSet<PolicyEntity> Policies { get; set; }
 
-    public virtual DbSet<InstallmentEntity> Installmenties { get; set; }
+    public virtual DbSet<InstallmentEntity> Installments { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

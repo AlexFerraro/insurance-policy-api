@@ -2,5 +2,5 @@
 
 public interface IInstallmentAppService
 {
-    Task RegisterPaymentAsync(int entityId, DateOnly datePayment);
+    Task RegisterPaymentForPolicyAsync(int entityId, DateOnly datePayment);
 }

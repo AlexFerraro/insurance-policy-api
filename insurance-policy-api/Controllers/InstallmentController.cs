@@ -25,7 +25,7 @@ public class InstallmentController : ControllerBase
     public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime paidDate
                                                             , [FromServices] IInstallmentAppService _installmentAppService)
     {
-        await _installmentAppService.RegisterPaymentAsync(id, DateOnly.FromDateTime(paidDate));
+        await _installmentAppService.RegisterPaymentForPolicyAsync(id, DateOnly.FromDateTime(paidDate));
 
         var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
 
