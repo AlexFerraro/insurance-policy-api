@@ -1,4 +1,5 @@
 using AutoMapper;
+using insurance_policy_api.Factory;
 using insurance_policy_api.Interfaces;
 using insurance_policy_api.Mapper;
 using insurance_policy_api.Middlewares;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IInstallmentDomainService, InstallmentDomainService>(
 builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
 builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
 builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();
+builder.Services.AddScoped<HateoasFactory>();
 
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
@@ -67,22 +69,6 @@ builder.Services.AddSwaggerGen(opt =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     opt.IncludeXmlComments(xmlPath);
 });
-
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//        .AddJwtBearer(options =>
-//        {
-//            options.TokenValidationParameters = new TokenValidationParameters
-//            {
-//                ValidateIssuer = true,
-//                ValidateAudience = true,
-//                ValidateLifetime = true,
-//                ValidateIssuerSigningKey = true,
-//                ValidIssuer = builder.Configuration["Jwt:Issuer"],
-//                ValidAudience = builder.Configuration["Jwt:Audience"],
-//                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-//                ClockSkew = TimeSpan.Zero
-//            };
-//        });
 
 //Configuração do AutoMapper
 var config = new MapperConfiguration(cfg =>

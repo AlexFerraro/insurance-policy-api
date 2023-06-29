@@ -1,4 +1,4 @@
-﻿namespace insurance_policy_api_domain.Excepitions;
+﻿namespace insurance_policy_api_domain.Exceptions;
 
 public class InstallmentNotFoundException : Exception
 {

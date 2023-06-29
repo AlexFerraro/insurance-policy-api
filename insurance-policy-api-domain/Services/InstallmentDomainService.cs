@@ -1,6 +1,6 @@
 ﻿using insurance_policy_api_domain.Contracts;
 using insurance_policy_api_domain.Entities.Installment;
-using insurance_policy_api_domain.Excepitions;
+using insurance_policy_api_domain.Exceptions;
 
 namespace insurance_policy_api_domain.Services;
 
@@ -48,7 +48,7 @@ public class InstallmentDomainService : IInstallmentDomainService
     {
         installmentPayment.PaidDate = paidDate;
         installmentPayment.Situation = "PAGO";
-        installmentPayment.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.Now);
+        installmentPayment.RegistrationChangeDate = DateOnly.FromDateTime(DateTime.UtcNow);
         installmentPayment.UserRecordChange = 3;
     }
 
@@ -56,7 +56,7 @@ public class InstallmentDomainService : IInstallmentDomainService
     {
         int daysLate = paidDate.DayNumber - installmentPayment.PaymentDate.Value.DayNumber;
         decimal interestRate = GetInterestRate(installmentPayment.PaymentMethod.Value);
-        installmentPayment.Interest = installmentPayment.Premium.Value * interestRate * daysLate;   
+        installmentPayment.Interest = installmentPayment.Premium.Value * interestRate * daysLate;
     }
 
     private decimal GetInterestRate(PaymentMethod paymentMethod)
@@ -69,4 +69,4 @@ public class InstallmentDomainService : IInstallmentDomainService
             _ => 0m
         };
     }
-} 
+}

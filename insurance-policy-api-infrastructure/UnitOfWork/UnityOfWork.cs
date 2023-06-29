@@ -1,6 +1,5 @@
 ﻿using insurance_policy_api_infrastructure.Contexts;
 using insurance_policy_api_infrastructure.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace insurance_policy_api_infrastructure.UnitOfWork;
 

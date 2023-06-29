@@ -1,4 +1,5 @@
 ﻿using insurance_policy_api.DTOs;
+using insurance_policy_api.Factory;
 using insurance_policy_api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -12,15 +13,17 @@ namespace insurance_policy_api.Controllers;
 public class PolicyController : ControllerBase
 {
     private readonly IPolicyAppService _policyAppService;
+    private readonly HateoasFactory _hateoasFactory;
 
-    public PolicyController(IPolicyAppService policyAppService) =>
-        _policyAppService = policyAppService;
+    public PolicyController(IPolicyAppService policyAppService, HateoasFactory hateoasFactory) =>
+        (_policyAppService, _hateoasFactory) = (policyAppService, hateoasFactory);
 
     /// <summary>
-    /// Cria uma apólice.
+    /// Creates a policy.
     /// </summary>
     /// <remarks>
-    /// Cria uma apólice com suas parcelas de pagamento.<br />
+    /// This method creates a policy with its payment installments. <br />
+    /// Make sure to provide all the necessary details to create the policy correctly. <br />
     /// </remarks>
     [HttpPost]
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status201Created)]
@@ -31,33 +34,26 @@ public class PolicyController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        if(policy.Installments is null)
+        if (policy.Installments is null)
             return BadRequest("The policy needs to have at least one installment in order to be created.");
 
         var policyCreated = await _policyAppService.CreatePolicyAsync(policy);
 
-        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-
         var response = new ResponseDTO<PolicyDTO>()
         {
             Data = policyCreated,
-            Links = new LinkDTO[]
-            {
-                new LinkDTO($"{urlBase}/{policyCreated.Id}", "get_policy", "GET"),
-                new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
-                new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
-                new LinkDTO($"{urlBase}/parcela/{policyCreated.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
-            }
+            Links = _hateoasFactory.CreateLinksForCreatedPolicy(policyCreated.Id, GetBaseUrl())
         };
 
-        return Created($"{urlBase}/{response.Data.Id}", response);
+        return Created($"{GetBaseUrl()}/{response.Data.Id}", response);
     }
 
     /// <summary>
-    /// Busca todas as apólices registradas.
+    /// Retrieves all registered policies.
     /// </summary>
     /// <remarks>
-    /// Retorna todas as apólices do banco de dados criadas de forma paginável.<br />
+    /// This method retrieves all registered policies from the database in a paginated manner. <br />
+    /// Make sure to correctly specify the pagination parameters to obtain the desired results. <br />
     /// </remarks>
     [HttpGet]
     [ProducesResponseType(typeof(ResponseDTO<IEnumerable<PolicyDetailsDTO>>), StatusCodes.Status200OK)]
@@ -66,26 +62,21 @@ public class PolicyController : ControllerBase
     {
         var policiesReceived = await _policyAppService.GetAllPoliciesAsync(skip, take);
 
-        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-
         var response = new ResponseDTO<IEnumerable<PolicyDetailsDTO>>()
         {
             Data = policiesReceived,
-            Links = new LinkDTO[]
-            {
-                new LinkDTO($"{urlBase}/{policiesReceived.First().Id}", "get_first_policy", "GET"),
-                new LinkDTO($"{urlBase}/{policiesReceived.Last().Id}", "get_last_policy", "GET")
-            }
+            Links = _hateoasFactory.CreateLinksForGetAllPolicies(GetBaseUrl())
         };
 
         return Ok(response);
     }
 
     /// <summary>
-    /// Busca uma apólice registrada.
+    /// Retrieves a registered policy.
     /// </summary>
     /// <remarks>
-    /// Busca uma apólice por id e suas respectivas parcelas.<br />
+    /// Retrieves a policy by its ID and its respective payment installments. <br />
+    /// Make sure to provide the correct policy ID to obtain the desired information. <br />
     /// </remarks>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
@@ -96,29 +87,23 @@ public class PolicyController : ControllerBase
         var policyReceived = await _policyAppService.GetPolicyByIdAsync(id);
 
         if (policyReceived is null)
-            return NotFound();
-
-        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path.ToString().Substring(0, 15)}";
+            return NotFound("The policy was not found.");
 
         var response = new ResponseDTO<PolicyDTO>()
         {
             Data = policyReceived,
-            Links = new LinkDTO[]
-            {
-                new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
-                new LinkDTO($"{urlBase}", "update_policy", "PATCH"),
-                new LinkDTO($"{urlBase}/parcela/{policyReceived.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
-            }
+            Links = _hateoasFactory.CreateLinksForGetPolicyById(GetBaseUrl())
         };
 
         return Ok(response);
     }
 
     /// <summary>
-    /// Atualiza uma apólice e parcelas.
+    /// Updates a policy and its installments.
     /// </summary>
     /// <remarks>
-    /// Atualiza uma apólice e suas respectivas parcelas no banco de dados. Se o array de parcelas fornecido for nulo, apenas a apólice será atualizada.<br />
+    /// This method updates a policy and its respective installments in the database. If the provided array of installments is null, only the policy will be updated. <br />
+    /// Make sure to provide the correct data to update the policy and its installments. <br />
     /// </remarks>
     [HttpPatch]
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
@@ -130,23 +115,19 @@ public class PolicyController : ControllerBase
             return BadRequest(ModelState);
 
         if (policy.Id is 0)
-            return BadRequest("O ID da apólice não pode ser zero.");
+            return BadRequest("The policy ID cannot be zero in payload.");
 
         var updatedPolicy = await _policyAppService.UpdatePolicyAsync(policy);
-
-        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
 
         var response = new ResponseDTO<PolicyDTO>()
         {
             Data = updatedPolicy,
-            Links = new LinkDTO[]
-            {
-                new LinkDTO($"{urlBase}/{updatedPolicy.Id}", "get_policy", "GET"),
-                new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
-                new LinkDTO($"{urlBase}/parcela/{updatedPolicy.Id}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
-            }
+            Links = _hateoasFactory.CreateLinksForUpdatedPolicy(updatedPolicy.Id, GetBaseUrl())
         };
 
         return Ok(response);
     }
+
+    private string GetBaseUrl() =>
+        $"{Request.Scheme}://{Request.Host}{Request.Path}";
 }

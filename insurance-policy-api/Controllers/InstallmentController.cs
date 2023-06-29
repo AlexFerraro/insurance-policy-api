@@ -1,4 +1,5 @@
 ﻿using insurance_policy_api.DTOs;
+using insurance_policy_api.Factory;
 using insurance_policy_api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -11,11 +12,18 @@ namespace insurance_policy_api.Controllers;
 [Produces(Application.Json)]
 public class InstallmentController : ControllerBase
 {
+    private readonly HateoasFactory _hateoasFactory;
+
+    public InstallmentController(HateoasFactory hateoasFactory) =>
+        _hateoasFactory = hateoasFactory;
+
     /// <summary>
-    /// Lança um pagamento de uma parcela de uma apólice.
+    /// Make a payment for an installment of a policy.
     /// </summary>
     /// <remarks>
-    /// Gera a baixa de uma parcela do pagamento de uma apólice.
+    /// Endpoint responsible for registering the payment of an installment of a policy.
+    /// After the payment is registered, the corresponding installment is marked as paid.
+    /// An installment that is already paid cannot be paid again.
     /// </remarks>
     [HttpPost("{id:int}/pagamento")]
     [ProducesResponseType(typeof(LinkDTO[]), StatusCodes.Status200OK)]
@@ -23,19 +31,15 @@ public class InstallmentController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime paidDate
-                                                            , [FromServices] IInstallmentAppService _installmentAppService)
+        , [FromServices] IInstallmentAppService installmentAppService)
     {
-        await _installmentAppService.RegisterPaymentForPolicyAsync(id, DateOnly.FromDateTime(paidDate));
+        await installmentAppService.RegisterPaymentForPolicyAsync(id, DateOnly.FromDateTime(paidDate));
 
-        var urlBase = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-
-        var response = new LinkDTO[]
-        {
-            new LinkDTO($"{urlBase}/{id}", "get_policy", "GET"),
-            new LinkDTO($"{urlBase}?skip=0&take=100", "get_all_policy", "GET"),
-            new LinkDTO($"{urlBase}", "update_policy", "PATCH")
-        };
+        var response = _hateoasFactory.CreateLinksForRegisterPaymentForPolicy(GetBaseUrl());
 
         return Ok(response);
     }
+
+    private string GetBaseUrl() =>
+        $"{Request.Scheme}://{Request.Host}/v1/api/apolice";
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace insurance_policy_api_domain.Excepitions;
+﻿namespace insurance_policy_api_domain.Exceptions;
 
 public class PaymentAlreadyMadeException : Exception
 {

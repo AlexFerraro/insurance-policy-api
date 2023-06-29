@@ -15,8 +15,8 @@ public class PolicyAppService : IPolicyAppService
     private readonly IMapper _mapper;
 
     public PolicyAppService(IPolicyDomainService policyDomainService, IInstallmentDomainService installmentDomainService
-                                , IUnityOfWork unityOfWork, IMapper mapper) 
-        => (_policyDomainService, _installmentDomainService, _unityOfWork, _mapper) 
+                                , IUnityOfWork unityOfWork, IMapper mapper)
+        => (_policyDomainService, _installmentDomainService, _unityOfWork, _mapper)
                 = (policyDomainService, installmentDomainService, unityOfWork, mapper);
 
 
@@ -55,7 +55,7 @@ public class PolicyAppService : IPolicyAppService
 
     private async Task UpdatePolicyInstallmentiesAsync(PolicyEntity policyEntity)
     {
-        if (policyEntity.Installments is not null)
+        if (policyEntity.Installments is not null && policyEntity.Installments.Count > 0)
             await _installmentDomainService.UpdateInstallmentiesAsync(policyEntity.Installments);
     }
 }

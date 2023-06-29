@@ -9,20 +9,20 @@ public record class PolicyBaseDTO
     public int Id { get; init; }
 
     [JsonPropertyName("descricao")]
-    [Required(ErrorMessage = "O campo descrição não pode ser nulo ou vazio!", AllowEmptyStrings = false)]
+    [Required(ErrorMessage = "The description field cannot be null or empty.", AllowEmptyStrings = false)]
     public string Description { get; init; }
 
     [JsonPropertyName("cpf")]
-    [Required(ErrorMessage = "O campo cpf não pode ser nulo!")]
+    [Required(ErrorMessage = "The cpf field cannot be null.")]
     public long Cpf { get; init; }
 
     [JsonPropertyName("situacao")]
-    [Required(ErrorMessage = "O campo situacao não pode ser nulo ou vazio!", AllowEmptyStrings = false)]
-    [RegularExpression("^(ATIVA|INATIVA)$", ErrorMessage = "O campo situacao pode conter apenas as palavras ATIVA e INATIVA!")]
+    [Required(ErrorMessage = "The status field cannot be null or empty.", AllowEmptyStrings = false)]
+    [RegularExpression("^(ATIVA|INATIVA)$", ErrorMessage = "The status field can only contain the words ATIVA and INATIVA.")]
     // Trocar o RegularExpression para [AllowedValues("ATIVA", "INATIVA")] no .NET 8.
     public string Status { get; init; }
 
     [JsonPropertyName("premioTotal")]
-    [Required(ErrorMessage = "O campo premioTotal não pode ser nulo!")]
+    [Required(ErrorMessage = "The premiumTotal field cannot be null.")]
     public decimal PremiumTotal { get; init; }
 }
