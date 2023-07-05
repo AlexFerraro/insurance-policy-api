@@ -4,7 +4,7 @@ namespace insurance_policy_api.Factory;
 
 public class HateoasFactory
 {
-    public LinkDTO[] CreateLinksForCreatedPolicy(int id, string urlBase) =>
+    public LinkDTO[] CreateLinksForCreatedPolicy(long id, string urlBase) =>
         new LinkDTO[]
         {
             new LinkDTO($"{urlBase}/{id}", "get_policy", "GET"),
@@ -28,7 +28,7 @@ public class HateoasFactory
             new LinkDTO($"{urlBase.Replace("/apolice","")}/parcela/{{int:id}}/pagamento?datePagamento={DateTime.Now}", "register_payment", "POST")
         };
 
-    public LinkDTO[] CreateLinksForUpdatedPolicy(int id, string urlBase) =>
+    public LinkDTO[] CreateLinksForUpdatedPolicy(long id, string urlBase) =>
         new LinkDTO[]
         {
             new LinkDTO($"{urlBase}/{id}", "get_policy", "GET"),

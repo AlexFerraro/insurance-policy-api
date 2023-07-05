@@ -12,7 +12,7 @@ public class InstallmentRepository : IInstallmentRepository
     public InstallmentRepository(PolicyDbContext context) =>
         _policyDbContext = context;
 
-    public async Task<InstallmentEntity> GetByIdAsync(int entityID) =>
+    public async Task<InstallmentEntity> GetByIdAsync(long entityID) =>
         await _policyDbContext.Installments
                     .FirstOrDefaultAsync(installment => installment.EntityID == entityID);
 

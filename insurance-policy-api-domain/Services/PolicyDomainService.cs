@@ -14,7 +14,7 @@ public class PolicyDomainService : IPolicyDomainService
     public async Task CreateNewPolicyAsync(PolicyEntity policyEntity) =>
         await _policyRepository.AddAsync(policyEntity);
 
-    public async Task<PolicyEntity> RetrievePolicyByIdAsync(int policyId) =>
+    public async Task<PolicyEntity> RetrievePolicyByIdAsync(long policyId) =>
         await _policyRepository.GetByIdAsync(policyId);
 
     public async Task<IEnumerable<PolicyEntity>> RetrieveAllPoliciesAsync(int skip, int take) =>

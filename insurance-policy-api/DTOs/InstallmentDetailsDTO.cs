@@ -18,7 +18,7 @@ public record class InstallmentDetailsDTO : InstallmentDTO
 
     [JsonPropertyName("dataCriacao")]
     [JsonPropertyOrderAttribute(8)]
-    public DateTime? RecordCreationDate { get; init; }
+    public DateTime RecordCreationDate { get; init; }
 
     [JsonPropertyName("dataAlteracao")]
     [JsonPropertyOrderAttribute(9)]
@@ -26,7 +26,7 @@ public record class InstallmentDetailsDTO : InstallmentDTO
 
     [JsonPropertyName("usuarioCriacao")]
     [JsonPropertyOrderAttribute(10)]
-    public int? RecordCreatedByUser { get; init; }
+    public int RecordCreatedByUser { get; init; }
 
     [JsonPropertyName("usuarioAlteracao")]
     [JsonPropertyOrderAttribute(11)]

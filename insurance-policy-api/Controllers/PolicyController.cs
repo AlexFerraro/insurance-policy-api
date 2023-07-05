@@ -78,11 +78,11 @@ public class PolicyController : ControllerBase
     /// Retrieves a policy by its ID and its respective payment installments. <br />
     /// Make sure to provide the correct policy ID to obtain the desired information. <br />
     /// </remarks>
-    [HttpGet("{id:int}")]
+    [HttpGet("{long:int}")]
     [ProducesResponseType(typeof(ResponseDTO<PolicyDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetPolicyByIdAsync([FromRoute][Required] int id)
+    public async Task<IActionResult> GetPolicyByIdAsync([FromRoute][Required] long id)
     {
         var policyReceived = await _policyAppService.GetPolicyByIdAsync(id);
 

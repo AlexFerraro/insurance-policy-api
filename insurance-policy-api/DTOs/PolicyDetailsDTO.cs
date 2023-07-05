@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace insurance_policy_api.DTOs;
 
@@ -6,7 +7,8 @@ public record class PolicyDetailsDTO : PolicyBaseDTO
 {
     [JsonPropertyName("dataCriacao")]
     [JsonPropertyOrderAttribute(6)]
-    public DateTime? DataCriacaoRegistro { get; init; }
+    [Required(ErrorMessage = "The DataCriacaoRegistro field cannot be null.")]
+    public DateTime DataCriacaoRegistro { get; init; }
 
     [JsonPropertyName("dataAlteracao")]
     [JsonPropertyOrderAttribute(7)]
@@ -14,7 +16,8 @@ public record class PolicyDetailsDTO : PolicyBaseDTO
 
     [JsonPropertyName("usuarioCriacao")]
     [JsonPropertyOrderAttribute(8)]
-    public int? UsuarioCriacaoRegistro { get; init; }
+    [Required(ErrorMessage = "The UsuarioCriacaoRegistro field cannot be null.")]
+    public int UsuarioCriacaoRegistro { get; init; }
 
     [JsonPropertyName("usuarioAlteracao")]
     [JsonPropertyOrderAttribute(9)]

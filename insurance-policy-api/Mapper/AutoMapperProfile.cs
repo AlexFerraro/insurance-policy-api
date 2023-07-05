@@ -15,12 +15,12 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Cpf))
             .ForMember(dest => dest.Situation, opt => opt.MapFrom(src => src.Status))
-            .ForMember(dest => dest.TotalPrize, opt => opt.MapFrom(src => src.PremiumTotal))
+            .ForMember(dest => dest.TotalPremium, opt => opt.MapFrom(src => src.PremiumTotal))
             .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Installments));
 
         CreateMap<InstallmentDTO, InstallmentEntity>()
             .ForMember(dest => dest.EntityID, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.IdApolice, opt => opt.Ignore())
+            .ForMember(dest => dest.PolicyFK, opt => opt.Ignore())
             .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => Enum.Parse<PaymentMethod>(src.PaymentMethod.ToUpper())))
             .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.PaymentDate)))
@@ -32,22 +32,22 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => src.Cpf))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
-            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.TotalPrize.Value))
+            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.TotalPremium))
             .ForMember(dest => dest.Installments, opt => opt.MapFrom(src => src.Installments));
 
         CreateMap<InstallmentEntity, InstallmentDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
-            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium.Value))
+            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value.ToString("yyyy-MM-dd")));
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.ToString("yyyy-MM-dd")));
 
         CreateMap<PolicyEntity, PolicyDetailsDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Cpf, opt => opt.MapFrom(src => long.Parse(src.Cpf)))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
-            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.TotalPrize))
-            .ForMember(dest => dest.DataCriacaoRegistro, opt => opt.MapFrom(src => src.RecordCreationDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.PremiumTotal, opt => opt.MapFrom(src => src.TotalPremium))
+            .ForMember(dest => dest.DataCriacaoRegistro, opt => opt.MapFrom(src => src.RecordCreationDate.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.DataAlteracaoRegistro, opt => opt.MapFrom(src => src.RegistrationChangeDate.Value.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.UsuarioCriacaoRegistro, opt => opt.MapFrom(src => src.UserCreationRecord))
             .ForMember(dest => dest.UsuarioAlteracaoRegistro, opt => opt.MapFrom(src => src.UserRecordChange))
@@ -55,13 +55,13 @@ public class AutoMapperProfile : Profile
 
         CreateMap<InstallmentEntity, InstallmentDetailsDTO>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.EntityID))
-            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium.Value))
+            .ForMember(dest => dest.Premium, opt => opt.MapFrom(src => src.Premium))
             .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod.ToString().ToUpper()))
-            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.PaymentDate.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.PaidDate, opt => opt.MapFrom(src => src.PaidDate.Value.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.Interest, opt => opt.MapFrom(src => src.Interest.Value))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Situation))
-            .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.RecordCreationDate.Value.ToString("yyyy-MM-dd")))
+            .ForMember(dest => dest.RecordCreationDate, opt => opt.MapFrom(src => src.RecordCreationDate.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.RecordModificationDate, opt => opt.MapFrom(src => src.RegistrationChangeDate.Value.ToString("yyyy-MM-dd")))
             .ForMember(dest => dest.RecordCreatedByUser, opt => opt.MapFrom(src => src.UserCreationRecord))
             .ForMember(dest => dest.RecordModifiedByUser, opt => opt.MapFrom(src => src.UserRecordChange));

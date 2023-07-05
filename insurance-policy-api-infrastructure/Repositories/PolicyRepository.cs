@@ -15,7 +15,7 @@ public class PolicyRepository : IPolicyRepository
     public async Task AddAsync(PolicyEntity policyEntity) =>
         await _policyDbContext.Policies.AddAsync(policyEntity);
 
-    public async Task<PolicyEntity> GetByIdAsync(int entityID) =>
+    public async Task<PolicyEntity> GetByIdAsync(long entityID) =>
         await _policyDbContext.Policies.Include(i => i.Installments).FirstOrDefaultAsync(f => f.EntityID == entityID);
 
     public async Task<IEnumerable<PolicyEntity>> GetAllAsync(int skip, int take) =>

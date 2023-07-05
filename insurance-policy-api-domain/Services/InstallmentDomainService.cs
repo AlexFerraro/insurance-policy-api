@@ -24,7 +24,7 @@ public class InstallmentDomainService : IInstallmentDomainService
         await _installmentRepository.UpdateRangeAsync(installmentiesToUpdate);
     }
 
-    public async Task RegisterPaymentAsync(int policyId, DateOnly paidDate)
+    public async Task RegisterPaymentAsync(long policyId, DateOnly paidDate)
     {
         var installmentPayment = await _installmentRepository.GetByIdAsync(policyId);
 
@@ -54,9 +54,9 @@ public class InstallmentDomainService : IInstallmentDomainService
 
     private void ApplyInterestIfOverdue(InstallmentEntity installmentPayment, DateOnly paidDate)
     {
-        int daysLate = paidDate.DayNumber - installmentPayment.PaymentDate.Value.DayNumber;
-        decimal interestRate = GetInterestRate(installmentPayment.PaymentMethod.Value);
-        installmentPayment.Interest = installmentPayment.Premium.Value * interestRate * daysLate;
+        int daysLate = paidDate.DayNumber - installmentPayment.PaymentDate.DayNumber;
+        decimal interestRate = GetInterestRate(installmentPayment.PaymentMethod);
+        installmentPayment.Interest = installmentPayment.Premium * interestRate * daysLate;
     }
 
     private decimal GetInterestRate(PaymentMethod paymentMethod)

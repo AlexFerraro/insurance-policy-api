@@ -14,7 +14,7 @@ public class InstallmentAppService : IInstallmentAppService
         (_installmentDomainService, _unityOfWork) = (installmentDomainService, unityOfWork);
 
 
-    public async Task RegisterPaymentForPolicyAsync(int entityId, DateOnly datePayment)
+    public async Task RegisterPaymentForPolicyAsync(long entityId, DateOnly datePayment)
     {
         await _installmentDomainService.RegisterPaymentAsync(entityId, datePayment);
 

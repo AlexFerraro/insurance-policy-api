@@ -5,7 +5,7 @@ namespace insurance_policy_api.DTOs;
 public record class InstallmentDTO
 {
     [JsonPropertyName("id")]
-    public int Id { get; init; }
+    public long Id { get; init; }
 
     [JsonPropertyName("premio")]
     [Required(ErrorMessage = "The premium field cannot be null.")]

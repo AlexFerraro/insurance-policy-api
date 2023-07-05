@@ -25,12 +25,12 @@ public class InstallmentController : ControllerBase
     /// After the payment is registered, the corresponding installment is marked as paid.
     /// An installment that is already paid cannot be paid again.
     /// </remarks>
-    [HttpPost("{id:int}/pagamento")]
+    [HttpPost("{long:int}/pagamento")]
     [ProducesResponseType(typeof(LinkDTO[]), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] int id, [FromQuery][Required] DateTime paidDate
+    public async Task<IActionResult> RegisterPaymentAsync([FromRoute][Required] long id, [FromQuery][Required] DateTime paidDate
         , [FromServices] IInstallmentAppService installmentAppService)
     {
         await installmentAppService.RegisterPaymentForPolicyAsync(id, DateOnly.FromDateTime(paidDate));

@@ -31,7 +31,7 @@ public class PolicyAppService : IPolicyAppService
         return _mapper.Map<PolicyDTO>(policyEntity);
     }
 
-    public async Task<PolicyDTO> GetPolicyByIdAsync(int entityId) =>
+    public async Task<PolicyDTO> GetPolicyByIdAsync(long entityId) =>
         _mapper.Map<PolicyDTO>(await _policyDomainService.RetrievePolicyByIdAsync(entityId));
 
     public async Task<IEnumerable<PolicyDetailsDTO>> GetAllPoliciesAsync(int skip, int take)
