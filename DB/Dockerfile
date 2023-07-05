@@ -1,10 +1,10 @@
-FROM postgres:15
+FROM postgres:latest
 
 COPY script.sql /docker-entrypoint-initdb.d/
 
 ENV POSTGRES_USER=postgres \
     POSTGRES_PASSWORD=postgres \
-    POSTGRES_DB=apolicy_db
+    POSTGRES_DB=policy_db
 
 EXPOSE 5432
 

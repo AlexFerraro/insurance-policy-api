@@ -10,12 +10,14 @@ namespace insurance_policy_api.Services;
 public class PolicyAppService : IPolicyAppService
 {
     private readonly IPolicyDomainService _policyDomainService;
+    private readonly IInstallmentDomainService _installmentDomainService;
     private readonly IUnityOfWork _unityOfWork;
     private readonly IMapper _mapper;
 
-    public PolicyAppService(IPolicyDomainService policyDomainService
-                                , IUnityOfWork unityOfWork, IMapper mapper) =>
-        (_policyDomainService, _unityOfWork, _mapper) = (policyDomainService, unityOfWork, mapper);
+    public PolicyAppService(IPolicyDomainService policyDomainService, IInstallmentDomainService installmentDomainService
+                                , IUnityOfWork unityOfWork, IMapper mapper)
+        => (_policyDomainService, _installmentDomainService, _unityOfWork, _mapper)
+                = (policyDomainService, installmentDomainService, unityOfWork, mapper);
 
 
     public async Task<PolicyDTO> CreatePolicyAsync(PolicyDTO policyDto)
@@ -29,7 +31,7 @@ public class PolicyAppService : IPolicyAppService
         return _mapper.Map<PolicyDTO>(policyEntity);
     }
 
-    public async Task<PolicyDTO> GetPolicyByIdAsync(int entityId) =>
+    public async Task<PolicyDTO> GetPolicyByIdAsync(long entityId) =>
         _mapper.Map<PolicyDTO>(await _policyDomainService.RetrievePolicyByIdAsync(entityId));
 
     public async Task<IEnumerable<PolicyDetailsDTO>> GetAllPoliciesAsync(int skip, int take)
@@ -39,22 +41,21 @@ public class PolicyAppService : IPolicyAppService
         return _mapper.Map<IEnumerable<PolicyDetailsDTO>>(policies);
     }
 
-
     public async Task<PolicyDTO> UpdatePolicyAsync(PolicyDTO policyDto)
     {
         var policyEntity = _mapper.Map<PolicyEntity>(policyDto);
 
         await _policyDomainService.UpdatePolicyAsync(policyEntity);
+        await UpdatePolicyInstallmentiesAsync(policyEntity);
 
         await _unityOfWork.CommitAsync();
 
         return _mapper.Map<PolicyDTO>(policyEntity);
     }
 
-    public async Task RegisterPaymentAsync(int entityId, DateOnly datePayment)
+    private async Task UpdatePolicyInstallmentiesAsync(PolicyEntity policyEntity)
     {
-        await _policyDomainService.RegisterPaymentForPolicyAsync(entityId, datePayment);
-
-        await _unityOfWork.CommitAsync();
+        if (policyEntity.Installments is not null && policyEntity.Installments.Count > 0)
+            await _installmentDomainService.UpdateInstallmentiesAsync(policyEntity.Installments);
     }
 }

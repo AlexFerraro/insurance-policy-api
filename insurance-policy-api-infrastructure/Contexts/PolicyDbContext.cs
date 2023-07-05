@@ -18,7 +18,7 @@ public partial class PolicyDbContext : DbContext
 
     public virtual DbSet<PolicyEntity> Policies { get; set; }
 
-    public virtual DbSet<InstallmentEntity> Installmenties { get; set; }
+    public virtual DbSet<InstallmentEntity> Installments { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -27,68 +27,66 @@ public partial class PolicyDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PolicyEntity>(entity =>
+        modelBuilder.Entity<InstallmentEntity>(entity =>
         {
-            entity.HasKey(e => e.EntityID).HasName("apolice_pkey");
+            entity.HasKey(e => e.EntityID).HasName("pk_installment");
 
-            entity.ToTable("apolice");
+            entity.ToTable("installment");
 
             entity.Property(e => e.EntityID)
                 .UseIdentityAlwaysColumn()
-                .HasColumnName("id");
+                .HasColumnName("installment_id");
+            entity.Property(e => e.RecordCreationDate).HasColumnName("creation_date");
+            entity.Property(e => e.UserCreationRecord).HasColumnName("creation_user");
+            entity.Property(e => e.Interest)
+                .HasPrecision(10, 2)
+                .HasColumnName("interest");
+            entity.Property(e => e.RegistrationChangeDate).HasColumnName("modification_date");
+            entity.Property(e => e.UserRecordChange).HasColumnName("modification_user");
+            entity.Property(e => e.PaidDate).HasColumnName("paid_date");
+            entity.Property(e => e.PaymentDate).HasColumnName("payment_date");
+            entity.Property(e => e.PaymentMethod)
+                .HasMaxLength(10)
+                .HasColumnName("payment_method");
+            entity.Property(e => e.PolicyFK).HasColumnName("policy_fk");
+            entity.Property(e => e.Premium)
+                .HasPrecision(10, 2)
+                .HasColumnName("premium");
+            entity.Property(e => e.Situation)
+                .HasMaxLength(10)
+                .HasColumnName("status");
+
+            entity.HasOne(d => d.Policy).WithMany(p => p.Installments)
+                .HasForeignKey(d => d.PolicyFK)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_policy_installment");
+        });
+
+        modelBuilder.Entity<PolicyEntity>(entity =>
+        {
+            entity.HasKey(e => e.EntityID).HasName("pk_policy");
+
+            entity.ToTable("policy");
+
+            entity.Property(e => e.EntityID)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("policy_id");
             entity.Property(e => e.Cpf)
                 .HasMaxLength(12)
                 .HasColumnName("cpf");
-            entity.Property(e => e.RegistrationChangeDate).HasColumnName("data_alteracao_registro");
-            entity.Property(e => e.RecordCreationDate).HasColumnName("data_criacao_registro");
+            entity.Property(e => e.RecordCreationDate).HasColumnName("creation_date");
+            entity.Property(e => e.UserCreationRecord).HasColumnName("creation_user");
             entity.Property(e => e.Description)
                 .HasMaxLength(50)
-                .HasColumnName("descricao");
-            entity.Property(e => e.TotalPrize)
-                .HasPrecision(10, 2)
-                .HasColumnName("premio_total");
+                .HasColumnName("description");
+            entity.Property(e => e.RegistrationChangeDate).HasColumnName("modification_date");
+            entity.Property(e => e.UserRecordChange).HasColumnName("modification_user");
             entity.Property(e => e.Situation)
                 .HasMaxLength(10)
-                .HasColumnName("situacao");
-            entity.Property(e => e.UserRecordChange).HasColumnName("usuario_alteracao_registro");
-            entity.Property(e => e.UserCreationRecord).HasColumnName("usuario_criacao_registro");
-        });
-
-        modelBuilder.Entity<InstallmentEntity>(entity =>
-        {
-            entity.HasKey(e => e.EntityID).HasName("parcela_pkey");
-
-            entity.ToTable("parcela");
-
-            entity.Property(e => e.EntityID)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("id");
-            entity.Property(e => e.RegistrationChangeDate).HasColumnName("data_alteracao_registro");
-            entity.Property(e => e.RecordCreationDate).HasColumnName("data_criacao_registro");
-            entity.Property(e => e.PaymentDate).HasColumnName("data_pagamento");
-            entity.Property(e => e.PaidDate).HasColumnName("data_pago");
-            entity.Property(e => e.PaymentMethod)
-            .HasConversion(
-                    v => v.ToString(),
-                    v => (PaymentMethod)Enum.Parse(typeof(PaymentMethod), v))
-                .HasMaxLength(50)
-                .HasColumnName("forma_pagamento");
-            entity.Property(e => e.IdApolice).HasColumnName("id_apolice");
-            entity.Property(e => e.Interest)
+                .HasColumnName("status");
+            entity.Property(e => e.TotalPremium)
                 .HasPrecision(10, 2)
-                .HasColumnName("juros");
-            entity.Property(e => e.Premium)
-                .HasPrecision(10, 2)
-                .HasColumnName("premio");
-            entity.Property(e => e.Situation)
-                .HasMaxLength(10)
-                .HasColumnName("situacao");
-            entity.Property(e => e.UserRecordChange).HasColumnName("usuario_alteracao_registro");
-            entity.Property(e => e.UserCreationRecord).HasColumnName("usuario_criacao_registro");
-
-            entity.HasOne(d => d.Policy).WithMany(p => p.Installments)
-                .HasForeignKey(d => d.IdApolice)
-                .HasConstraintName("apolice_id_apolice__fkey");
+                .HasColumnName("total_premium");
         });
 
         OnModelCreatingPartial(modelBuilder);

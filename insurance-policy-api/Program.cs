@@ -1,4 +1,5 @@
 using AutoMapper;
+using insurance_policy_api.Factory;
 using insurance_policy_api.Interfaces;
 using insurance_policy_api.Mapper;
 using insurance_policy_api.Middlewares;
@@ -12,6 +13,7 @@ using insurance_policy_api_infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using System.Net.Mime;
 using System.Reflection;
 using System.Text.Json;
@@ -21,15 +23,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<PolicyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection")
-                        , options => { options.CommandTimeout(5); }));
+                        , options => { options.CommandTimeout(3); }));
 //.EnableSensitiveDataLogging()
 //.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole())));
 
 builder.Services.AddScoped<IPolicyAppService, PolicyAppService>();
+builder.Services.AddScoped<IInstallmentAppService, InstallmentAppService>();
 builder.Services.AddScoped<IPolicyDomainService, PolicyDomainService>();
+builder.Services.AddScoped<IInstallmentDomainService, InstallmentDomainService>();
 builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
 builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
 builder.Services.AddScoped<IUnityOfWork, UnityOfWork>();
+builder.Services.AddScoped<HateoasFactory>();
 
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
@@ -40,6 +45,25 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "insurance-policy-api", Version = "v1" });
+
+    var securitySchema = new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+    };
+
+    opt.AddSecurityDefinition("Bearer", securitySchema);
+
+    var securityRequirement = new OpenApiSecurityRequirement
+        {
+            { securitySchema, new[] { "Bearer" } }
+        };
+
+    opt.AddSecurityRequirement(securityRequirement);
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

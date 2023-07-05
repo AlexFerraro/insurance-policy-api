@@ -1,17 +1,18 @@
 ﻿namespace insurance_policy_api_domain.Entities.Installment;
 
-public class InstallmentEntity : EntityBase<int>
+public class InstallmentEntity : EntityBase<long>
 {
-    public int? IdApolice { get; set; }
-    public decimal? Premium { get; set; }
-    public PaymentMethod? PaymentMethod { get; set; }
-    public DateOnly? PaymentDate { get; set; }
+    public long PolicyFK { get; set; }
+    public decimal Premium { get; set; }
+    public PaymentMethod PaymentMethod { get; set; }
+    public DateOnly PaymentDate { get; set; }
     public DateOnly? PaidDate { get; set; } = null;
     public decimal? Interest { get; set; } = null;
     public string? Situation { get; set; } = null;
-    public PolicyEntity? Policy { get; set; }
 
-    public InstallmentEntity(int installmentID, int idApolice, decimal premium
+    public PolicyEntity Policy { get; set; }
+
+    public InstallmentEntity(long installmentID, long idApolice, decimal premium
         , PaymentMethod paymentMethod, DateOnly paymentDate
         , string situation, PolicyEntity policy) : base(installmentID)
     {
@@ -30,4 +31,7 @@ public class InstallmentEntity : EntityBase<int>
 
     internal bool IsInstallmentOverdue() =>
         PaidDate > PaymentDate;
+
+    internal bool IsPaid() =>
+        Situation is "PAGO";
 }

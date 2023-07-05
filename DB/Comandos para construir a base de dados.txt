@@ -1,0 +1,7 @@
+Abra o terminal na pasta do schema (script.sql) e do dockerfile.
+
+Execute:
+
+docker build -t my-postgres-image .
+
+docker run -d --name my-postgres-container -p 5432:5432 my-postgres-image

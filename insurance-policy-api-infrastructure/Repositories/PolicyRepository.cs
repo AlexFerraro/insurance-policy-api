@@ -15,14 +15,17 @@ public class PolicyRepository : IPolicyRepository
     public async Task AddAsync(PolicyEntity policyEntity) =>
         await _policyDbContext.Policies.AddAsync(policyEntity);
 
-    public async Task<PolicyEntity> GetByIdAsync(int entityID) =>
-        await _policyDbContext.Policies
-                .Include(p => p.Installments)
-                .FirstOrDefaultAsync(f => f.EntityID == entityID);
+    public async Task<PolicyEntity> GetByIdAsync(long entityID) =>
+        await _policyDbContext.Policies.Include(i => i.Installments).FirstOrDefaultAsync(f => f.EntityID == entityID);
 
     public async Task<IEnumerable<PolicyEntity>> GetAllAsync(int skip, int take) =>
         await _policyDbContext.Policies.Include(i => i.Installments).Skip(skip).Take(take).ToListAsync();
 
     public async Task UpdateAsync(PolicyEntity policyEntity) =>
         await Task.Run(() => _policyDbContext.Policies.Update(policyEntity));
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
 }
