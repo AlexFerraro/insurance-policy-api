@@ -25,5 +25,4 @@ public record class PolicyDetailsDTO : PolicyBaseDTO
 
     [JsonPropertyOrderAttribute(10)]
     public IEnumerable<InstallmentDetailsDTO> Installments { get; init; }
-
 }
