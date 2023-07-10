@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "insurance-policy-api-application", "insurance-policy-api-application\insurance-policy-api-application.csproj", "{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,14 @@ Global
 		{93675637-0B12-467F-BCC2-781D48421CDB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93675637-0B12-467F-BCC2-781D48421CDB}.Release|x64.ActiveCfg = Release|x64
 		{93675637-0B12-467F-BCC2-781D48421CDB}.Release|x64.Build.0 = Release|x64
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Debug|x64.Build.0 = Debug|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Release|x64.ActiveCfg = Release|Any CPU
+		{9CDF5BE6-9850-4B28-9103-21A3CC3EF070}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

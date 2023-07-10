@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-namespace insurance_policy_api.DTOs;
+
+namespace insurance_policy_api_application.DTOs;
 
 public record class InstallmentDTO
 {

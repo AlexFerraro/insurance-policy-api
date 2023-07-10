@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>insurance_policy_api_application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\insurance-policy-api-domain\insurance-policy-api-domain.csproj" />
+    <ProjectReference Include="..\insurance-policy-api-infrastructure\insurance-policy-api-infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

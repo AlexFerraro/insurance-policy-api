@@ -1,6 +1,6 @@
-﻿using insurance_policy_api.DTOs;
+﻿using insurance_policy_api_application.DTOs;
 
-namespace insurance_policy_api.Interfaces;
+namespace insurance_policy_api_application.Interfaces;
 
 public interface IPolicyAppService
 {

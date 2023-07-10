@@ -1,9 +1,9 @@
 using AutoMapper;
 using insurance_policy_api.Factory;
-using insurance_policy_api.Interfaces;
-using insurance_policy_api.Mapper;
 using insurance_policy_api.Middlewares;
-using insurance_policy_api.Services;
+using insurance_policy_api_application.Interfaces;
+using insurance_policy_api_application.Mapper;
+using insurance_policy_api_application.Services;
 using insurance_policy_api_domain.Contracts;
 using insurance_policy_api_domain.Services;
 using insurance_policy_api_infrastructure.Contexts;

@@ -1,8 +1,8 @@
-﻿using insurance_policy_api.Interfaces;
+﻿using insurance_policy_api_application.Interfaces;
 using insurance_policy_api_domain.Contracts;
 using insurance_policy_api_infrastructure.Interfaces;
 
-namespace insurance_policy_api.Services;
+namespace insurance_policy_api_application.Services;
 
 public class InstallmentAppService : IInstallmentAppService
 {

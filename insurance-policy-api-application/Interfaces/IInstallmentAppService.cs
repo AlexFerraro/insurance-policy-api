@@ -1,4 +1,4 @@
-﻿namespace insurance_policy_api.Interfaces;
+﻿namespace insurance_policy_api_application.Interfaces;
 
 public interface IInstallmentAppService
 {
