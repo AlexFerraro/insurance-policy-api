@@ -108,7 +108,7 @@ Recupera todas as apólices de seguro registradas.
 
 ##### Parâmetros da Solicitação
 
-- `skip` (int): N
+- `skip` (int): Número de registros a serem ignorados na consulta (utilizado para paginação).
 
 úmero de registros a serem ignorados na consulta (utilizado para paginação).
 - `take` (int): Número máximo de registros a serem retornados na consulta (utilizado para paginação).
