@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using insurance_policy_api.DTOs;
+using insurance_policy_api_application.DTOs;
 using insurance_policy_api_domain.Entities;
 using insurance_policy_api_domain.Entities.Installment;
 using System.Collections.ObjectModel;
 
-namespace insurance_policy_api.Mapper;
+namespace insurance_policy_api_application.Mapper;
 
 public class AutoMapperProfile : Profile
 {

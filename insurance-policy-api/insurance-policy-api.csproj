@@ -16,13 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\insurance-policy-api-infrastructure\insurance-policy-api-infrastructure.csproj" />
+    <ProjectReference Include="..\insurance-policy-api-application\insurance-policy-api-application.csproj" />
   </ItemGroup>
 
 </Project>

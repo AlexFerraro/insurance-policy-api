@@ -1,6 +1,7 @@
 ﻿using insurance_policy_api.DTOs;
 using insurance_policy_api.Factory;
-using insurance_policy_api.Interfaces;
+using insurance_policy_api_application.DTOs;
+using insurance_policy_api_application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
